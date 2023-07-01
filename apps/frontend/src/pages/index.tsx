@@ -1,25 +1,23 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "@next/font/google";
-import styles from "@/styles/Home.module.css";
 import { Header } from "@/components/Header";
 import {
   Box,
   Button,
   ButtonGroup,
-  Center,
   Container,
-  Divider,
+  Flex,
   Heading,
   Highlight,
-  Spacer,
-  Square,
+  Img,
+  Stack,
   Text,
   VStack,
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
 import A from "next/link";
+import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,7 +46,7 @@ export default function Home() {
             filter="blur(2px) contrast(0.8) brightness(1.2)"
           >
             <img
-              src="solarcell.png"
+              src="landing/solarcell.png"
               width="100%"
               style={{
                 objectFit: "cover",
@@ -87,10 +85,11 @@ export default function Home() {
                 <Button
                   as={A}
                   colorScheme="green"
-                  borderRadius="3xl"
+                  borderRadius="full"
                   width={150}
                   size="lg"
                   href={"/login/individual"}
+                  border="2px solid black"
                 >
                   <Text fontSize="xl">Individuals</Text>
                 </Button>
@@ -98,10 +97,11 @@ export default function Home() {
                 <Button
                   as={A}
                   colorScheme="green"
-                  borderRadius="3xl"
+                  borderRadius="full"
                   width={150}
                   size="lg"
                   href={"/login/sme"}
+                  border="2px solid black"
                 >
                   <Text>SMEs</Text>
                 </Button>
@@ -122,9 +122,69 @@ export default function Home() {
           </Wrap>
 
           <Text>and much more</Text>
-          <Button colorScheme="whatsapp" size="lg">
-            Explore Our Project
-          </Button>
+          <Button size="lg">Explore Our Project</Button>
+        </VStack>
+
+        <VStack textAlign="center" p={16} m="auto" bg="#9DC17766">
+          <Heading fontWeight="bold">What We Done</Heading>
+          <Stack
+            width="100%"
+            justify="space-evenly"
+            py={16}
+            direction={{ base: "column", md: "row" }}
+          >
+            <VStack>
+              <Img
+                boxSize={256}
+                objectFit="contain"
+                src="/landing/co2.png"
+                alt={"co2"}
+              />
+              <Heading size="md">9999 tCO2e Offset</Heading>
+            </VStack>
+            <VStack>
+              <Img
+                boxSize={256}
+                objectFit="contain"
+                src="/landing/student.png"
+                alt={"individual"}
+              />
+              <Heading size="md">134 Green Individuals</Heading>
+            </VStack>
+            <VStack>
+              <Img
+                boxSize={256}
+                objectFit="contain"
+                src="/landing/paper-bag.png"
+                alt={"smes"}
+              />
+              <Heading size="md">69 Carbon Neutral SMEs</Heading>
+            </VStack>
+          </Stack>
+        </VStack>
+
+        <VStack textAlign="center" p={16} m="auto">
+          <Heading fontWeight="bold" color="green.500">
+            3 Easy Steps to Offset
+          </Heading>
+          <Stack
+            spacing={10}
+            justify="center"
+            p={16}
+            direction={{ base: "column", md: "row" }}
+          >
+            <WrapItem>
+              <Box w={256} h={256} bg="blue.200" />
+            </WrapItem>
+            <WrapItem>
+              <Box w={256} h={256} bg="blue.200" />
+            </WrapItem>
+            <WrapItem>
+              <Box w={256} h={256} bg="blue.200" />
+            </WrapItem>
+          </Stack>
+
+          <Button colorScheme="green">Click Here to Purchase</Button>
         </VStack>
       </main>
     </>
