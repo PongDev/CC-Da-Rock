@@ -30,6 +30,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <main>
         <Header />
 
@@ -133,7 +134,7 @@ export default function Home() {
             py={16}
             direction={{ base: "column", md: "row" }}
           >
-            <VStack>
+            <VStack spacing={4}>
               <Img
                 boxSize={256}
                 objectFit="contain"
@@ -142,7 +143,7 @@ export default function Home() {
               />
               <Heading size="md">9999 tCO2e Offset</Heading>
             </VStack>
-            <VStack>
+            <VStack spacing={4}>
               <Img
                 boxSize={256}
                 objectFit="contain"
@@ -151,7 +152,7 @@ export default function Home() {
               />
               <Heading size="md">134 Green Individuals</Heading>
             </VStack>
-            <VStack>
+            <VStack spacing={4}>
               <Img
                 boxSize={256}
                 objectFit="contain"
@@ -185,6 +186,16 @@ export default function Home() {
           </Stack>
 
           <Button colorScheme="green">Click Here to Purchase</Button>
+        </VStack>
+
+        <VStack textAlign="center" p={16} bg="#FFED9433">
+          <Heading fontWeight="bold">
+            Got questions? We’re here to help!
+          </Heading>
+          <Text>Our highly available team is always ready to help you.</Text>
+          <Button px={16} mt={8}>
+            Contact us
+          </Button>
         </VStack>
       </main>
     </>
