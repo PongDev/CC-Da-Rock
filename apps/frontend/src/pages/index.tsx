@@ -16,7 +16,7 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import A from "next/link";
+import { Link } from "@chakra-ui/next-js";
 import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -84,7 +84,7 @@ export default function Home() {
 
               <ButtonGroup p="6vw" display="flex" gap={8}>
                 <Button
-                  as={A}
+                  as={Link}
                   colorScheme="green"
                   borderRadius="full"
                   width={150}
@@ -96,7 +96,7 @@ export default function Home() {
                 </Button>
 
                 <Button
-                  as={A}
+                  as={Link}
                   colorScheme="green"
                   borderRadius="full"
                   width={150}
