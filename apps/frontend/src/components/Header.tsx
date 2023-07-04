@@ -2,11 +2,13 @@
 
 import {
   Box,
+  BoxProps,
   Button,
   Center,
   Collapse,
   Divider,
   Flex,
+  forwardRef,
   Heading,
   HStack,
   Icon,
@@ -15,6 +17,7 @@ import {
   Spacer,
   Stack,
   Text,
+  useColorMode,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
@@ -32,11 +35,11 @@ const navs = [
   { display: "About Us", href: "/about" },
 ];
 
-export const Header = () => {
+export const Header = forwardRef<BoxProps, "div">((props, ref) => {
   const { isOpen, onToggle, onClose } = useDisclosure();
 
   return (
-    <Box bg="white" zIndex={100}>
+    <Box bg="white" zIndex={100} ref={ref} {...props}>
       <Flex alignItems="center" gap={4} p={4}>
         <Link href="/" onClick={onClose}>
           <HStack>
@@ -63,6 +66,7 @@ export const Header = () => {
         </Button>
 
         <IconButton
+          color="black"
           aria-label="menu"
           icon={<GiHamburgerMenu size={32} />}
           onClick={onToggle}
@@ -74,7 +78,7 @@ export const Header = () => {
       </Collapse>
     </Box>
   );
-};
+});
 
 const menuNavs = [
   { display: "Home", href: "/" },

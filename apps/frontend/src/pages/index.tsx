@@ -82,14 +82,14 @@ export default function Home() {
                 future.
               </Text>
 
-              <ButtonGroup p="6vw" display="flex" gap={8}>
+              <ButtonGroup p="6vw" display="flex" gap={8} colorScheme="green">
                 <Button
                   as={Link}
-                  colorScheme="green"
+                  color="black"
                   borderRadius="full"
                   width={150}
                   size="lg"
-                  href={"/login/individual"}
+                  href={"/auth/individual"}
                   border="2px solid black"
                 >
                   <Text fontSize="xl">Individuals</Text>
@@ -97,11 +97,11 @@ export default function Home() {
 
                 <Button
                   as={Link}
-                  colorScheme="green"
+                  color="black"
                   borderRadius="full"
                   width={150}
                   size="lg"
-                  href={"/login/sme"}
+                  href={"/auth/sme"}
                   border="2px solid black"
                 >
                   <Text>SMEs</Text>
