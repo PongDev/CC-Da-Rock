@@ -9,6 +9,7 @@ import {
   Heading,
   Input,
   Select,
+  Spacer,
   Stack,
   StackProps,
   Tab,
@@ -19,20 +20,34 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 export default function Sme() {
+  const [index, setIndex] = useState(0);
+
+  let title, subtitle;
+  switch (index) {
+    case 0:
+      title = "Welcome";
+      subtitle = "Login to Take an Action";
+      break;
+    case 1:
+      title = "Be Our Member";
+      subtitle = "Take an Action and Get More Privilege";
+  }
+
   return (
     <>
       <Header />
 
       <Box px="8" py="8">
         <Heading fontSize="4xl" lineHeight="10">
-          Welcome
+          {title}
         </Heading>
-        <Text>Login to Take an Action</Text>
+        <Text>{subtitle}</Text>
       </Box>
 
-      <Tabs isFitted>
+      <Tabs isFitted index={index} onChange={setIndex}>
         <TabList>
           <Tab>Login</Tab>
           <Tab>Register</Tab>
@@ -80,7 +95,9 @@ const LoginSME = forwardRef<StackProps, "div">((props, ref) => {
         <Input variant="filled" type="password" size="lg" shadow="lg" />
       </FormControl>
 
-      <Button colorScheme="green" color="black">
+      <Spacer />
+
+      <Button colorScheme="green" color="black" size="lg" mt={4}>
         Login
       </Button>
     </Stack>
@@ -117,19 +134,30 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
 
       <FormControl>
         <FormLabel fontWeight="bold">Industry Type</FormLabel>
-        <Select variant="filled" placeholder="Select Industry Type">
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
+        <Select
+          variant="filled"
+          placeholder="Select Industry Type"
+          size="lg"
+          shadow="lg"
+        >
+          <option value="manufacture">Manufacture</option>
+          <option value="trade">Trade</option>
+          <option value="service">Service</option>
         </Select>
       </FormControl>
 
       <FormControl>
         <FormLabel fontWeight="bold">Company’s Size</FormLabel>
-        <Select variant="filled" placeholder="Select Company’s Size">
-          <option value="option1">S</option>
-          <option value="option2">M</option>
-          <option value="option3">L</option>
+        <Select
+          variant="filled"
+          placeholder="Select Company’s Size"
+          size="lg"
+          shadow="lg"
+        >
+          <option value="small">
+            Small (not exceed 50 M baht in total asset)
+          </option>
+          <option value="medium">Medium (51-150 M baht in total asset)</option>
         </Select>
       </FormControl>
 
@@ -143,7 +171,9 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
         <Input variant="filled" type="password" size="lg" shadow="lg" />
       </FormControl>
 
-      <Button colorScheme="green" color="black">
+      <Spacer />
+
+      <Button colorScheme="green" color="black" size="lg">
         Register
       </Button>
     </Stack>
