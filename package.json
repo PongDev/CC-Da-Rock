@@ -51,5 +51,8 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "prisma": {
+    "schema": "packages/database/prisma/schema.prisma"
   }
 }
