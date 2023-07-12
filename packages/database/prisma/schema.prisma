@@ -12,7 +12,46 @@ datasource db {
 
 // Add dummy models to make the schema valid
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  email       String        @unique
+  password    String
+  phone       String
+  role        RoleType      @default(USER)
+  idNumber    String?
+  token       String?
+  smes        SMEs?
+  Transaction Transaction[]
+}
+
+enum RoleType {
+  USER
+  ADMIN
+}
+
+model SMEs {
+  id       Int      @id @default(autoincrement())
+  industry SMEsType
+  size     SMEsSize
+  user     User     @relation(fields: [userId], references: [id], onUpdate: Cascade)
+  userId   Int      @unique
+}
+
+enum SMEsType {
+  MANUFACTURE
+  TRADE
+  SERVICE
+}
+
+enum SMEsSize {
+  SMALL
+  MEDIUM
+}
+
+model Transaction {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id], onUpdate: Cascade)
+  cf     Int  // carbon footprint
+  scc    Int  // solar carbon coin
+  userId Int
 }
