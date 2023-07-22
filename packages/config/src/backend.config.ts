@@ -2,6 +2,7 @@
 
 export type BackendConfig = {
   node_env: string;
+  url: string;
   port: number;
   bcrypt: {
     hashRound: number;
@@ -12,6 +13,10 @@ export type BackendConfig = {
       expire: number;
     };
     refreshToken: {
+      secret: string;
+      expire: number;
+    };
+    emailToken: {
       secret: string;
       expire: number;
     };
@@ -26,6 +31,16 @@ export type BackendConfig = {
     autoSchemaFile: string | boolean;
     sortSchema: boolean;
     path: string;
+  };
+  email: {
+    // host: string,
+    service: string;
+    // port: number,
+    // secure: true,
+    auth: {
+      user: string;
+      pass: string;
+    };
   };
 };
 
@@ -52,6 +67,9 @@ export const loadBackendConfig = (): BackendConfig => {
 
   return {
     node_env: process.env.NODE_ENV ?? "development",
+    url: process.env.BACKEND_HOST
+      ? `http://${process.env.BACKEND_HOST}`
+      : "http://localhost",
     port: parseInt(process.env.BACKEND_PORT ?? "", 10) || 3000,
     bcrypt: {
       hashRound:
@@ -70,6 +88,11 @@ export const loadBackendConfig = (): BackendConfig => {
           parseInt(process.env.BACKEND_JWT_REFRESH_TOKEN_EXPIRE ?? "", 10) ||
           604800,
       },
+      emailToken: {
+        secret: process.env.BACKEND_JWT_EMAIL_TOKEN_SECRET ?? "",
+        expire:
+          parseInt(process.env.BACKEND_JWT_EMAIL_TOKEN_EXPIRE ?? "", 10) || 60,
+      },
     },
     swagger: {
       enable: process.env.BACKEND_SWAGGER_ENABLE === "true",
@@ -81,6 +104,16 @@ export const loadBackendConfig = (): BackendConfig => {
       autoSchemaFile,
       sortSchema: process.env.BACKEND_GRAPHQL_SORT_SCHEMA === "true",
       path: graphqlPath,
+    },
+    email: {
+      // host: process.env.EMAIL_HOST || 'smtp.gamil.com',
+      service: process.env.EMAIL_SERVICE || "gmail",
+      // port: 587,
+      // secure: true,
+      auth: {
+        user: process.env.EMAIL_AUTH_USER || "default@gmail.com",
+        pass: process.env.EMAIL_AUTH_PASS || "default_password",
+      },
     },
   };
 };

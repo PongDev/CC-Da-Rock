@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { SMEsSize, SMEsType, User } from 'database';
+import { RoleType, SMEsSize, SMEsType, User } from 'database';
 // import { InvalidRequestError } from 'src/common/error';
-import { InvalidRequestError, RecordAlreadyExists } from 'src/common/error';
+import {
+  DatabaseError,
+  InvalidRequestError,
+  RecordAlreadyExists,
+} from 'src/common/error';
 
 @Injectable()
-export class UsersRepository {
+export class UserRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   // async createUserRetail(creatUserData: {
@@ -27,7 +31,7 @@ export class UsersRepository {
   //   }
   // }
 
-  async createUser(creatUserData: {
+  async registerUserWithoutEmail(creatUserData: {
     name: string;
     password: string;
     email: string;
@@ -37,8 +41,15 @@ export class UsersRepository {
     type?: SMEsType;
   }): Promise<User> {
     try {
+      const existedEmail = await this.findUniqueUser({
+        email: creatUserData.email,
+      });
+      if (existedEmail) {
+        throw new RecordAlreadyExists('Email has already been used.');
+      }
+      const { email, ...creatUserDataWithoutEmail } = creatUserData;
       const newUser = await this.prismaService.user.create({
-        data: creatUserData,
+        data: creatUserDataWithoutEmail,
       });
       if (creatUserData.size && creatUserData.type && newUser) {
         await this.prismaService.sMEs.create({
@@ -52,44 +63,80 @@ export class UsersRepository {
       return newUser;
     } catch (e) {
       if (e.code === 'P2002') {
-        throw new RecordAlreadyExists('Email already exists.');
+        throw new RecordAlreadyExists('Email or name already exists.');
       }
       throw e;
     }
   }
 
   async findUniqueUser(searchField: {
-    userId?: number;
-    email?: string;
+    id?: number;
     name?: string;
+    email?: string;
   }): Promise<User> {
-    if (!searchField.email && !searchField.userId) {
-      throw new InvalidRequestError('Must enter email/id.');
+    if (!searchField.id && !searchField.email && searchField.name) {
+      throw new DatabaseError('Must enter id, name or email.');
     }
     return await this.prismaService.user.findUnique({
-      where: {
-        id: searchField.userId,
-        email: searchField.email,
-        name: searchField.name,
-      },
+      where: searchField,
     });
   }
 
-  async getUserByEmail(email: string) {
-    return await this.prismaService.user.findUnique({
-      where: {
-        email: email,
-      },
+  async find(
+    searchField: {
+      id?: number;
+      name?: string;
+      email?: string;
+      phone?: string;
+      emailVerified?: boolean;
+      role?: RoleType;
+      idNumber?: string;
+      token?: string;
+    },
+    option?,
+  ) {
+    return await this.prismaService.user.findMany({
+      where: searchField,
+      ...option,
     });
   }
 
-  async updateToken(id: number, token: string) {
-    await this.prismaService.user.update({
+  async findFirst(searchField: {
+    id?: number;
+    email?: string;
+    emailVerified?: boolean;
+  }) {
+    return await this.prismaService.user.findFirst({
+      where: searchField,
+    });
+  }
+
+  async updateUser(
+    id: number,
+    data: {
+      id?: number;
+      name?: string;
+      email?: string;
+      password?: string;
+      phone?: string;
+      emailVerified?: boolean;
+      role?: RoleType;
+      idNumber?: string;
+      token?: string;
+    },
+  ) {
+    return await this.prismaService.user.update({
       where: {
         id: id,
       },
-      data: {
-        token: token,
+      data: data,
+    });
+  }
+
+  async deleteUser(id: number) {
+    return await this.prismaService.user.delete({
+      where: {
+        id: id,
       },
     });
   }

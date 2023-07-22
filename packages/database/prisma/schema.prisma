@@ -10,18 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Add dummy models to make the schema valid
 model User {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique
-  email       String        @unique
-  password    String
-  phone       String
-  role        RoleType      @default(USER)
-  idNumber    String?
-  token       String?
-  smes        SMEs?
-  Transaction Transaction[]
+  id                Int                 @id @default(autoincrement())
+  name              String              @unique
+  email             String?             @unique
+  password          String
+  phone             String
+  emailVerified     Boolean             @default(false)
+  role              RoleType            @default(USER)
+  idNumber          String?
+  token             String?
+  smes              SMEs?
+  Transaction       Transaction[]
+  VerificationEmail VerificationEmail[]
 }
 
 enum RoleType {
@@ -48,10 +49,17 @@ enum SMEsSize {
   MEDIUM
 }
 
+model VerificationEmail {
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  email     String
+  token     String
+}
+
 model Transaction {
   id     Int  @id @default(autoincrement())
   user   User @relation(fields: [userId], references: [id], onUpdate: Cascade)
-  cf     Int  // carbon footprint
-  scc    Int  // solar carbon coin
+  cf     Int // carbon footprint
+  scc    Int // solar carbon coin
   userId Int
 }

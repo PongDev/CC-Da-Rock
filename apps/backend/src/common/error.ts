@@ -12,6 +12,13 @@ export class RecordNotFound extends Error {
   }
 }
 
+export class DatabaseError extends Error {
+  constructor(msg: string) {
+    super(msg);
+    Object.setPrototypeOf(this, DatabaseError.prototype);
+  }
+}
+
 export class InvalidRequestError extends Error {
   constructor(msg: string) {
     super(msg);
@@ -30,5 +37,19 @@ export class FailedRelationConstraintError extends Error {
   constructor(msg: string) {
     super(msg);
     Object.setPrototypeOf(this, FailedRelationConstraintError.prototype);
+  }
+}
+
+export class EmailNotSentError extends Error {
+  constructor(msg: string) {
+    super(msg);
+    Object.setPrototypeOf(this, EmailNotSentError.prototype);
+  }
+}
+
+export class EmailHasBeenSent extends Error {
+  constructor(msg: string) {
+    super(msg);
+    Object.setPrototypeOf(this, EmailHasBeenSent.prototype);
   }
 }
