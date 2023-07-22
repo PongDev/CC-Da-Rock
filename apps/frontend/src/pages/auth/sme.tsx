@@ -22,6 +22,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function Sme() {
   const [index, setIndex] = useState(0);
@@ -78,30 +79,113 @@ export default function Sme() {
   );
 }
 
+type LoginFormData = {
+  identity: string;
+  company: string;
+  password: string;
+};
+
 const LoginSME = forwardRef<StackProps, "div">((props, ref) => {
+  const { register, handleSubmit } = useForm<LoginFormData>();
+
+  function onSubmit(data: LoginFormData) {
+    console.log(data);
+  }
+
   return (
-    <Stack spacing={6} ref={ref} {...props}>
-      <FormInput label="Username or Email" type="text" />
-      <FormInput label="Company’s Name" type="text" />
-      <FormInput label="Password" type="password" />
+    <Stack
+      spacing={6}
+      ref={ref}
+      as="form"
+      onSubmit={handleSubmit(onSubmit)}
+      {...props}
+    >
+      <FormInput
+        label="Username or Email"
+        type="text"
+        required
+        {...register("identity")}
+      />
+      <FormInput
+        label="Company’s Name"
+        type="text"
+        required
+        {...register("company")}
+      />
+      <FormInput
+        label="Password"
+        type="password"
+        required
+        {...register("password")}
+      />
 
       <Spacer />
 
-      <Button colorScheme="green" color="black" size="lg" mt={4}>
+      <Button colorScheme="green" color="black" size="lg" mt={4} type="submit">
         Login
       </Button>
     </Stack>
   );
 });
 
+// TODO: validaton & error reporting
+type RegisterFormData = {
+  firstName: string;
+  lastName: string;
+  idNumber: string;
+  email: string;
+  phone: string;
+  industry: string;
+  size: string;
+  password: string;
+  confirmPassword: string;
+};
+
 const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
+  const { register, handleSubmit } = useForm<RegisterFormData>();
+
+  function onSubmit(data: RegisterFormData) {
+    console.log(data);
+  }
+
   return (
-    <Stack spacing={6} ref={ref} {...props}>
-      <FormInput label="First Name" type="text" />
-      <FormInput label="Last Name" type="text" />
-      <FormInput label="Identification Number" type="text" />
-      <FormInput label="Email Address" type="email" />
-      <FormInput label="Phone Number" type="text" />
+    <Stack
+      spacing={6}
+      ref={ref}
+      as="form"
+      onSubmit={handleSubmit(onSubmit)}
+      {...props}
+    >
+      <FormInput
+        label="First Name"
+        type="text"
+        required
+        {...register("firstName")}
+      />
+      <FormInput
+        label="Last Name"
+        type="text"
+        required
+        {...register("lastName")}
+      />
+      <FormInput
+        label="Identification Number"
+        type="text"
+        required
+        {...register("idNumber")}
+      />
+      <FormInput
+        label="Email Address"
+        type="email"
+        required
+        {...register("email")}
+      />
+      <FormInput
+        label="Phone Number"
+        type="text"
+        required
+        {...register("phone")}
+      />
 
       <FormControl>
         <FormLabel fontWeight="bold">Industry Type</FormLabel>
@@ -110,6 +194,8 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
           placeholder="Select Industry Type"
           size="lg"
           shadow="lg"
+          required
+          {...register("industry")}
         >
           <option value="manufacture">Manufacture</option>
           <option value="trade">Trade</option>
@@ -124,6 +210,8 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
           placeholder="Select Company’s Size"
           size="lg"
           shadow="lg"
+          required
+          {...register("size")}
         >
           <option value="small">
             Small (not exceed 50 M baht in total asset)
@@ -132,12 +220,22 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
         </Select>
       </FormControl>
 
-      <FormInput label="Password" type="password" />
-      <FormInput label="Confirm Password" type="password" />
+      <FormInput
+        label="Password"
+        type="password"
+        required
+        {...register("password")}
+      />
+      <FormInput
+        label="Confirm Password"
+        type="password"
+        required
+        {...register("confirmPassword")}
+      />
 
       <Spacer />
 
-      <Button colorScheme="green" color="black" size="lg">
+      <Button colorScheme="green" color="black" size="lg" type="submit">
         Register
       </Button>
     </Stack>

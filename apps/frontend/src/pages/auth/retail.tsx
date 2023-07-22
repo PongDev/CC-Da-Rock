@@ -23,6 +23,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function Retail() {
   const [index, setIndex] = useState(0);
@@ -79,38 +80,123 @@ export default function Retail() {
   );
 }
 
+type LoginFormData = {
+  identity: string;
+  password: string;
+};
+
 const LoginRetail = forwardRef<StackProps, "div">((props, ref) => {
+  const { register, handleSubmit } = useForm<LoginFormData>();
+
+  function onSubmit(data: LoginFormData) {
+    console.log(data);
+  }
+
   return (
-    <Stack spacing={6} ref={ref} {...props}>
-      <FormInput label="Username or Email" type="text" />
-      <FormInput label="Password" type="password" />
+    <Stack
+      spacing={6}
+      ref={ref}
+      as="form"
+      onSubmit={handleSubmit(onSubmit)}
+      {...props}
+    >
+      <FormInput
+        label="Username or Email"
+        type="text"
+        required
+        {...register("identity")}
+      />
+      <FormInput
+        label="Password"
+        type="password"
+        required
+        {...register("password")}
+      />
 
       <Spacer />
 
-      <Button colorScheme="green" color="black" size="lg" mt={4}>
+      <Button colorScheme="green" color="black" size="lg" mt={4} type="submit">
         Login
       </Button>
     </Stack>
   );
 });
 
+// TODO: validaton & error reporting
+type RegisterFormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  idNumber: string;
+  password: string;
+  confirmPassword: string;
+};
+
 const RegisterRetail = forwardRef<StackProps, "div">((props, ref) => {
+  const { register, handleSubmit } = useForm<RegisterFormData>();
+
+  function onSubmit(data: RegisterFormData) {
+    console.log(data);
+  }
+
   return (
-    <Stack spacing={6} ref={ref} {...props}>
+    <Stack
+      spacing={6}
+      ref={ref}
+      as="form"
+      onSubmit={handleSubmit(onSubmit)}
+      {...props}
+    >
       <HStack>
-        <FormInput label="First Name" type="text" />
-        <FormInput label="Last Name" type="text" />
+        <FormInput
+          label="First Name"
+          type="text"
+          required
+          {...register("firstName")}
+        />
+        <FormInput
+          label="Last Name"
+          type="text"
+          required
+          {...register("lastName")}
+        />
       </HStack>
 
-      <FormInput label="Email Address" type="email" />
-      <FormInput label="Phone Number" type="text" />
-      <FormInput label="Identification Number" type="text" />
-      <FormInput label="Password" type="password" />
-      <FormInput label="Confirm Password" type="password" />
+      <FormInput
+        label="Email Address"
+        type="email"
+        required
+        {...register("email")}
+      />
+      <FormInput
+        label="Phone Number"
+        type="text"
+        required
+        {...register("phoneNumber")}
+      />
+      <FormInput
+        label="Identification Number"
+        type="text"
+        required
+        {...register("idNumber")}
+      />
+      <FormInput
+        label="Password"
+        type="password"
+        required
+        {...register("password")}
+      />
+      <FormInput
+        label="Confirm Password"
+        type="password"
+        required
+        {...register("confirmPassword")}
+      />
 
       <Spacer />
 
-      <Button colorScheme="green" color="black" size="lg">
+      <Button colorScheme="green" color="black" size="lg" type="submit">
         Register
       </Button>
     </Stack>
