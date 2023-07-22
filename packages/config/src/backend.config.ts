@@ -67,9 +67,7 @@ export const loadBackendConfig = (): BackendConfig => {
 
   return {
     node_env: process.env.NODE_ENV ?? "development",
-    url: process.env.BACKEND_HOST
-      ? `http://${process.env.BACKEND_HOST}`
-      : "http://localhost",
+    url: process.env.BACKEND_HOST || "http://localhost",
     port: parseInt(process.env.BACKEND_PORT ?? "", 10) || 3000,
     bcrypt: {
       hashRound:

@@ -9,6 +9,7 @@ import {
 import { Response } from 'express';
 import {
   EmailHasBeenSent,
+  BusinessLogicError,
   FailedRelationConstraintError,
   InvalidRequestError,
   PermissionError,
@@ -38,6 +39,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? HttpStatus.BAD_REQUEST
         : exception instanceof EmailHasBeenSent
         ? HttpStatus.BAD_REQUEST
+        : exception instanceof BusinessLogicError
+        ? HttpStatus.INTERNAL_SERVER_ERROR
         : // for native error
         exception instanceof BadRequestException
         ? HttpStatus.BAD_REQUEST

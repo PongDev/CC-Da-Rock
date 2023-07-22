@@ -7,6 +7,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { backendConfig } from 'config';
 import { GraphqlModule } from './graphql/graphql.module';
 import { AuthModule } from './auth/auth.module';
+import { SolarModule } from './solar/solar.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     GraphqlModule,
     AuthModule,
+    SolarModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -53,3 +53,9 @@ export class EmailHasBeenSent extends Error {
     Object.setPrototypeOf(this, EmailHasBeenSent.prototype);
   }
 }
+export class BusinessLogicError extends Error {
+  constructor(msg: string) {
+    super(msg);
+    Object.setPrototypeOf(this, BusinessLogicError.prototype);
+  }
+}

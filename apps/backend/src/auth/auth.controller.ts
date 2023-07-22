@@ -120,7 +120,10 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtRefreshAuthGuard)
   async refresh(@User() user: JWTPayload): Promise<JWTToken> {
-    return await this.authService.generateToken({ userID: user.userId });
+    return await this.authService.generateToken({
+      userID: user.userId,
+      role: user.role,
+    });
   }
 
   @ApiResponse({
@@ -141,9 +144,9 @@ export class AuthController {
 
   @Get('email/verify/:token')
   @HttpCode(HttpStatus.OK)
-  async verify(@Param('token') token: string): Promise<JWTToken> {
+  async verify(@Param('token') token: string): Promise<string> {
     const verifiedUserId = await this.authService.verifyEmail(token);
-    return await this.authService.generateToken({ userID: verifiedUserId });
+    return 'successfully verify email';
   }
 
   @Get('email/resend')

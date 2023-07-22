@@ -23,6 +23,7 @@ model User {
   smes              SMEs?
   Transaction       Transaction[]
   VerificationEmail VerificationEmail[]
+  SolarSerial       SolarSerial[]
 }
 
 enum RoleType {
@@ -62,4 +63,25 @@ model Transaction {
   cf     Int // carbon footprint
   scc    Int // solar carbon coin
   userId Int
+}
+
+model CarbonCreditSerial {
+  serialID  String   @id @default(uuid())
+  isBurned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  solarSerial SolarSerial[]
+}
+
+model SolarSerial {
+  serialID                   String   @id @default(uuid())
+  isBurned                   Boolean  @default(false)
+  burnedCarbonCreditSerialID String?
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+  ownerId                    Int
+
+  burnedCarbonCredit CarbonCreditSerial? @relation(fields: [burnedCarbonCreditSerialID], references: [serialID])
+  owner              User                @relation(fields: [ownerId], references: [id])
 }

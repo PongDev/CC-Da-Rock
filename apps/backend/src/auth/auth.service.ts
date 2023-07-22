@@ -103,7 +103,7 @@ export class AuthService {
     if (!validUser) {
       throw new PermissionError('Incorrect password.');
     }
-    return await this.generateToken({ userID: user.id });
+    return await this.generateToken({ userID: user.id, role: user.role });
   }
 
   signAccessToken(payload: JWTPayload): string {
