@@ -8,6 +8,7 @@ import {
   FormLabel,
   forwardRef,
   Heading,
+  HStack,
   Input,
   Select,
   Spacer,
@@ -23,7 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 
-export default function Sme() {
+export default function Retail() {
   const [index, setIndex] = useState(0);
 
   let title, subtitle;
@@ -64,12 +65,12 @@ export default function Sme() {
         <TabPanels>
           <TabPanel>
             <Container maxW="3xl" my={16}>
-              <LoginSME m="auto" />
+              <LoginRetail m="auto" />
             </Container>
           </TabPanel>
           <TabPanel>
             <Container maxW="3xl" my={16}>
-              <RegisterSME m="auto" />
+              <RegisterRetail m="auto" />
             </Container>
           </TabPanel>
         </TabPanels>
@@ -78,11 +79,10 @@ export default function Sme() {
   );
 }
 
-const LoginSME = forwardRef<StackProps, "div">((props, ref) => {
+const LoginRetail = forwardRef<StackProps, "div">((props, ref) => {
   return (
     <Stack spacing={6} ref={ref} {...props}>
       <FormInput label="Username or Email" type="text" />
-      <FormInput label="Company’s Name" type="text" />
       <FormInput label="Password" type="password" />
 
       <Spacer />
@@ -94,44 +94,17 @@ const LoginSME = forwardRef<StackProps, "div">((props, ref) => {
   );
 });
 
-const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
+const RegisterRetail = forwardRef<StackProps, "div">((props, ref) => {
   return (
     <Stack spacing={6} ref={ref} {...props}>
-      <FormInput label="First Name" type="text" />
-      <FormInput label="Last Name" type="text" />
-      <FormInput label="Identification Number" type="text" />
+      <HStack>
+        <FormInput label="First Name" type="text" />
+        <FormInput label="Last Name" type="text" />
+      </HStack>
+
       <FormInput label="Email Address" type="email" />
       <FormInput label="Phone Number" type="text" />
-
-      <FormControl>
-        <FormLabel fontWeight="bold">Industry Type</FormLabel>
-        <Select
-          variant="filled"
-          placeholder="Select Industry Type"
-          size="lg"
-          shadow="lg"
-        >
-          <option value="manufacture">Manufacture</option>
-          <option value="trade">Trade</option>
-          <option value="service">Service</option>
-        </Select>
-      </FormControl>
-
-      <FormControl>
-        <FormLabel fontWeight="bold">Company’s Size</FormLabel>
-        <Select
-          variant="filled"
-          placeholder="Select Company’s Size"
-          size="lg"
-          shadow="lg"
-        >
-          <option value="small">
-            Small (not exceed 50 M baht in total asset)
-          </option>
-          <option value="medium">Medium (51-150 M baht in total asset)</option>
-        </Select>
-      </FormControl>
-
+      <FormInput label="Identification Number" type="text" />
       <FormInput label="Password" type="password" />
       <FormInput label="Confirm Password" type="password" />
 
