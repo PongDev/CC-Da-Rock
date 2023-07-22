@@ -89,7 +89,7 @@ export default function Home() {
                   borderRadius="full"
                   width={150}
                   size="lg"
-                  href={"/auth/individual"}
+                  href={"/auth/retail"}
                   border="2px solid black"
                 >
                   <Text fontSize="xl">Individuals</Text>
