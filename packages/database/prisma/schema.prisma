@@ -71,8 +71,8 @@ model SolarSerial {
   burnedCarbonCreditSerialID String?
   createdAt                  DateTime @default(now())
   updatedAt                  DateTime @updatedAt
-  ownerId                    Int
+  ownerId                    Int?
 
   burnedCarbonCredit CarbonCreditSerial? @relation(fields: [burnedCarbonCreditSerialID], references: [serialID])
-  owner              User                @relation(fields: [ownerId], references: [id])
+  owner              User?               @relation(fields: [ownerId], references: [id])
 }
