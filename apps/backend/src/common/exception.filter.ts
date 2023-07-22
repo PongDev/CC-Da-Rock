@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
+  BusinessLogicError,
   FailedRelationConstraintError,
   InvalidRequestError,
   PermissionError,
@@ -35,6 +36,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? HttpStatus.CONFLICT
         : exception instanceof FailedRelationConstraintError
         ? HttpStatus.BAD_REQUEST
+        : exception instanceof BusinessLogicError
+        ? HttpStatus.INTERNAL_SERVER_ERROR
         : // for native error
         exception instanceof BadRequestException
         ? HttpStatus.BAD_REQUEST

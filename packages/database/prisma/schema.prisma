@@ -10,7 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Add dummy models to make the schema valid
 model User {
   id          Int           @id @default(autoincrement())
   name        String        @unique
@@ -22,6 +21,7 @@ model User {
   token       String?
   smes        SMEs?
   Transaction Transaction[]
+  SolarSerial SolarSerial[]
 }
 
 enum RoleType {
@@ -51,7 +51,28 @@ enum SMEsSize {
 model Transaction {
   id     Int  @id @default(autoincrement())
   user   User @relation(fields: [userId], references: [id], onUpdate: Cascade)
-  cf     Int  // carbon footprint
-  scc    Int  // solar carbon coin
+  cf     Int // carbon footprint
+  scc    Int // solar carbon coin
   userId Int
+}
+
+model CarbonCreditSerial {
+  serialID  String   @id @default(uuid())
+  isBurned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  solarSerial SolarSerial[]
+}
+
+model SolarSerial {
+  serialID                   String   @id @default(uuid())
+  isBurned                   Boolean  @default(false)
+  burnedCarbonCreditSerialID String?
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+  ownerId                    Int
+
+  burnedCarbonCredit CarbonCreditSerial? @relation(fields: [burnedCarbonCreditSerialID], references: [serialID])
+  owner              User                @relation(fields: [ownerId], references: [id])
 }
