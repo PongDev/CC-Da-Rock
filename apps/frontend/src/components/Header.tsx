@@ -60,10 +60,12 @@ export const Header = forwardRef<BoxProps, "div">((props, ref) => {
           ))}
         </HStack>
 
-        <Button colorScheme="green" borderRadius="3xl" gap={2}>
-          <FaUserAlt />
-          Login
-        </Button>
+        <Link href="/auth/choose">
+          <Button colorScheme="green" borderRadius="3xl" gap={2}>
+            <FaUserAlt />
+            Login
+          </Button>
+        </Link>
 
         <IconButton
           color="black"
