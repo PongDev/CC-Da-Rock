@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   UseFilters,
   UseGuards,
@@ -14,6 +15,8 @@ import {
   LoginRequest,
   RegisterUserResponse,
   RegisterUserRetailRequest,
+  RegisterUserSMEsRequest,
+  resendEmailDto,
 } from 'types';
 import { User } from './user.decorator';
 import { AuthService } from './auth.service';
@@ -22,6 +25,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllExceptionsFilter } from 'src/common/exception.filter';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import * as database from 'database';
+import { EmailNotSentError } from 'src/common/error';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -46,7 +50,15 @@ export class AuthController {
   async registerRetail(
     @Body() userData: RegisterUserRetailRequest,
   ): Promise<RegisterUserResponse> {
-    return await this.authService.registerRetail(userData);
+    const newUser = await this.authService.registerRetail(userData);
+    const emailSent = await this.authService.sendVerificationEmail(
+      userData.email,
+      newUser.id,
+    );
+    if (!emailSent) {
+      throw new EmailNotSentError('Email not sent.');
+    }
+    return newUser;
   }
 
   @ApiResponse({
@@ -64,9 +76,17 @@ export class AuthController {
   @Post('register/SMEs')
   @HttpCode(HttpStatus.CREATED)
   async registerSMEs(
-    @Body() userData: RegisterUserRetailRequest,
+    @Body() userData: RegisterUserSMEsRequest,
   ): Promise<RegisterUserResponse> {
-    return await this.authService.registerSMEs(userData);
+    const newUser = await this.authService.registerSMEs(userData);
+    const emailSent = await this.authService.sendVerificationEmail(
+      newUser.email,
+      newUser.id,
+    );
+    if (!emailSent) {
+      throw new EmailNotSentError('Email not sent.');
+    }
+    return newUser;
   }
 
   @ApiResponse({
@@ -76,6 +96,10 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad request. Please check your input again.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.',
   })
   @Post('login')
   @HttpCode(HttpStatus.OK)
@@ -97,14 +121,14 @@ export class AuthController {
   @UseGuards(JwtRefreshAuthGuard)
   async refresh(@User() user: JWTPayload): Promise<JWTToken> {
     return await this.authService.generateToken({
-      userID: user.userId,
+      userId: user.userId,
       role: user.role,
     });
   }
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Token has been refreshed.',
+    description: 'Get profile successfully.',
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
@@ -114,7 +138,48 @@ export class AuthController {
   @Get('profile')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
-  async profile(@User() user: JWTPayload): Promise<database.User> {
-    return await this.authService.profile(user.userID);
+  async profile(@User() user: JWTPayload) {
+    return await this.authService.profile(user.userId);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successfully verify email.',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Problem with the request. Invalid token is provided.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Link has expired or email has already been verified.',
+  })
+  @Get('email/verify/:token')
+  @HttpCode(HttpStatus.OK)
+  async verify(@Param('token') token: string): Promise<string> {
+    const verifiedUserId = await this.authService.verifyEmail(token);
+    return 'successfully verify email';
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successfully resend email.',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Problem with the request.',
+  })
+  @Get('email/resend')
+  @HttpCode(HttpStatus.OK)
+  async resendEmailVerification(@Body() data: resendEmailDto): Promise<string> {
+    const isEmailSent = await this.authService.resendVerificationEmail(
+      data.email,
+      data.id,
+    );
+    if (isEmailSent) {
+      return 'Email has been sent.';
+    } else {
+      throw new EmailNotSentError('Email not sent.');
+    }
   }
 }

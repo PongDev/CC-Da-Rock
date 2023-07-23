@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
+  EmailHasBeenSent,
   BusinessLogicError,
   FailedRelationConstraintError,
   InvalidRequestError,
@@ -35,6 +36,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         : exception instanceof RecordAlreadyExists
         ? HttpStatus.CONFLICT
         : exception instanceof FailedRelationConstraintError
+        ? HttpStatus.BAD_REQUEST
+        : exception instanceof EmailHasBeenSent
         ? HttpStatus.BAD_REQUEST
         : exception instanceof BusinessLogicError
         ? HttpStatus.INTERNAL_SERVER_ERROR

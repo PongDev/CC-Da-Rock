@@ -4,9 +4,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtRefreshTokenStrategy } from './jwt-refresh.strategy';
-import { UsersRepository } from 'src/repositories/userRepo';
+import { UserRepository } from 'src/repositories/userRepo';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthController } from './auth.controller';
+import { VerificationEmailRepository } from 'src/repositories/verificationEmailRepo';
+import { SMEsRepository } from 'src/repositories/smesRepo';
 
 @Module({
   imports: [PassportModule, JwtModule.register({})],
@@ -14,7 +16,9 @@ import { AuthController } from './auth.controller';
     AuthService,
     JwtStrategy,
     JwtRefreshTokenStrategy,
-    UsersRepository,
+    UserRepository,
+    VerificationEmailRepository,
+    SMEsRepository,
     PrismaService,
   ],
   controllers: [AuthController],

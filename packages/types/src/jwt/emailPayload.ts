@@ -1,6 +1,6 @@
 import { JwtPayload } from "jsonwebtoken";
 
-export type JWTPayload = JwtPayload & {
+export type JWTEmailPayload = JwtPayload & {
   userId: number;
-  role: string;
+  email: string;
 };
