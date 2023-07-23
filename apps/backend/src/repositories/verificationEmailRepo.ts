@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { FailedRelationConstraintError } from 'src/common/error';
 
 @Injectable()
 export class VerificationEmailRepository {
@@ -38,14 +39,21 @@ export class VerificationEmailRepository {
       token?: string;
     },
   ) {
-    return await this.prismaService.verificationEmail.upsert({
-      where: filter,
-      create: {
-        token: data.token,
-        userId: filter.userId,
-        email: data.email,
-      },
-      update: data,
-    });
+    try {
+      return await this.prismaService.verificationEmail.upsert({
+        where: filter,
+        create: {
+          token: data.token,
+          userId: filter.userId,
+          email: data.email,
+        },
+        update: data,
+      });
+    } catch (e) {
+      if (e.code === 'P2003') {
+        throw new FailedRelationConstraintError('Invalid userId');
+      }
+      throw e;
+    }
   }
 }

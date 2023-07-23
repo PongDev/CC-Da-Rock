@@ -121,7 +121,7 @@ export class AuthController {
   @UseGuards(JwtRefreshAuthGuard)
   async refresh(@User() user: JWTPayload): Promise<JWTToken> {
     return await this.authService.generateToken({
-      userID: user.userId,
+      userId: user.userId,
       role: user.role,
     });
   }
@@ -139,7 +139,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   async profile(@User() user: JWTPayload) {
-    return await this.authService.profile(user.userID);
+    return await this.authService.profile(user.userId);
   }
 
   @Get('email/verify/:token')
@@ -151,7 +151,7 @@ export class AuthController {
 
   @Get('email/resend')
   async resendEmailVerification(@Body() data: resendEmailDto): Promise<string> {
-    const isEmailSent = await this.authService.sendVerificationEmail(
+    const isEmailSent = await this.authService.resendVerificationEmail(
       data.email,
       data.id,
     );

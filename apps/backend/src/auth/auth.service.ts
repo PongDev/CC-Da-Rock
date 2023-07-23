@@ -103,7 +103,7 @@ export class AuthService {
     if (!validUser) {
       throw new PermissionError('Incorrect password.');
     }
-    return await this.generateToken({ userID: user.id, role: user.role });
+    return await this.generateToken({ userId: user.id, role: user.role });
   }
 
   signAccessToken(payload: JWTPayload): string {
@@ -133,7 +133,7 @@ export class AuthService {
     // const accessToken = this.signAccessTokenAsync(jwtPayload);
     // const refreshToken = this.signRefreshTokenAsync(jwtPayload);
     if (backendConfig.node_env === 'development') {
-      await this.userRepo.updateUser(jwtPayload.userID, { token: accessToken });
+      await this.userRepo.updateUser(jwtPayload.userId, { token: accessToken });
     }
     return {
       accessToken: accessToken,
@@ -169,7 +169,7 @@ export class AuthService {
     // check if sent within 15 min
     if (
       emailVerification &&
-      new Date().getTime() / 1000 - decodedEmailToken.exp < 15 * 60
+      new Date().getTime() / 1000 - decodedEmailToken.iat < 15 * 60
     ) {
       throw new EmailHasBeenSent('Verification email has been sent recently.');
     } else {
@@ -194,6 +194,7 @@ export class AuthService {
       throw new RecordNotFound('Email not found or has already been verified.');
     } else {
       const newEmailToken = await this.creatEmailToken(email, userId);
+      const verificationLink = `${backendConfig.url}:${backendConfig.port}/auth/email/verify/${newEmailToken.token}`;
       const transporter = nodemailer.createTransport({
         ...backendConfig.email,
       });
@@ -201,17 +202,9 @@ export class AuthService {
         from: '"SolarCC Company" <' + backendConfig.email.auth.user + '>',
         to: email, // list of receivers (separated by ,)
         subject: 'Verify Email for SolarCC',
-        html:
-          `Hi! <br><br> Thank you for register in our service. Your name has been registered as ${
-            (await this.profile(userId)).name
-          }.<br><br> ` +
-          '<a href=' +
-          backendConfig.url +
-          ':' +
-          backendConfig.port +
-          '/auth/email/verify/' +
-          newEmailToken.token +
-          '>Click here to activate your account</a>',
+        html: `Hi! <br><br> Thank you for register in our service. Your name has been registered as ${
+          (await this.profile(userId)).name
+        }.<br><br> <a href='${verificationLink}'>Click here to activate your account</a>`,
       };
       try {
         const emailSent = await transporter.sendMail(mailOptions);
@@ -252,6 +245,14 @@ export class AuthService {
         'Verification link already expired. Please try resending email option',
       );
     }
+  }
+
+  async resendVerificationEmail(email: string, userId: number) {
+    const userResult = await this.userRepo.findUniqueUser({ id: userId });
+    if (!userResult) {
+      throw new InvalidRequestError('Invalid userId.');
+    }
+    return await this.sendVerificationEmail(email, userId);
   }
 
   // async findAndDeleteUnusedUserByEmail(email: string): Promise<User>{
