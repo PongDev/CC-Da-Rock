@@ -2,11 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { RoleType, SMEsSize, SMEsType, User } from 'database';
 // import { InvalidRequestError } from 'src/common/error';
-import {
-  DatabaseError,
-  InvalidRequestError,
-  RecordAlreadyExists,
-} from 'src/common/error';
+import { InvalidRequestError, RecordAlreadyExists } from 'src/common/error';
 
 @Injectable()
 export class UserRepository {
@@ -75,7 +71,7 @@ export class UserRepository {
     email?: string;
   }): Promise<User> {
     if (!searchField.id && !searchField.email && searchField.name) {
-      throw new DatabaseError('Must enter id, name or email.');
+      throw new InvalidRequestError('Must enter id, name or email.');
     }
     return await this.prismaService.user.findUnique({
       where: searchField,

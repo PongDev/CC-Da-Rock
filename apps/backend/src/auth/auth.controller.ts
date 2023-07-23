@@ -142,6 +142,18 @@ export class AuthController {
     return await this.authService.profile(user.userId);
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successfully verify email.',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Problem with the request. Invalid token is provided.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Link has expired or email has already been verified.',
+  })
   @Get('email/verify/:token')
   @HttpCode(HttpStatus.OK)
   async verify(@Param('token') token: string): Promise<string> {
@@ -149,7 +161,16 @@ export class AuthController {
     return 'successfully verify email';
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successfully resend email.',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Problem with the request.',
+  })
   @Get('email/resend')
+  @HttpCode(HttpStatus.OK)
   async resendEmailVerification(@Body() data: resendEmailDto): Promise<string> {
     const isEmailSent = await this.authService.resendVerificationEmail(
       data.email,

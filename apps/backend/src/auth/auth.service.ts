@@ -191,7 +191,9 @@ export class AuthService {
     // check if already exists user with that email AND still not verified
     const verifiedEmail = await this.findUserWithVerifiedEmail(email);
     if (verifiedEmail) {
-      throw new RecordNotFound('Email not found or has already been verified.');
+      throw new InvalidRequestError(
+        'Email not found or has already been verified.',
+      );
     } else {
       const newEmailToken = await this.creatEmailToken(email, userId);
       const verificationLink = `${backendConfig.url}:${backendConfig.port}/auth/email/verify/${newEmailToken.token}`;
@@ -210,7 +212,7 @@ export class AuthService {
         const emailSent = await transporter.sendMail(mailOptions);
         return emailSent ? true : false;
       } catch (e) {
-        console.log('sendmail error');
+        console.log(e);
         throw e;
       }
     }
@@ -221,8 +223,8 @@ export class AuthService {
       await this.verificationEmailRepo.getVerificationEmailFromToken(token);
     // check if email has already been verified
     if (!verificationEmail) {
-      throw new RecordNotFound(
-        'Wrong id credential. Please try resending email option.',
+      throw new InvalidRequestError(
+        'Email cannot be activated due to invalid token.',
       );
     }
     const existedEmailUser = await this.findUserWithVerifiedEmail(
