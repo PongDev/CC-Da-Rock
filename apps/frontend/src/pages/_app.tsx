@@ -5,6 +5,7 @@ import {
   extendTheme,
   withDefaultColorScheme,
 } from "@chakra-ui/react";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
 
 const theme = extendTheme(
@@ -24,13 +25,17 @@ const theme = extendTheme(
       },
     },
   },
-  withDefaultColorScheme({ colorScheme: "brand" })
+  withDefaultColorScheme({ colorScheme: "brand" }),
 );
+
+const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </QueryClientProvider>
   );
 }
