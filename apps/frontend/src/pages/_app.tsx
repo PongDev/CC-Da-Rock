@@ -1,3 +1,4 @@
+import { setup } from "@/services/user.service";
 import "@/styles/globals.css";
 import {
   baseTheme,
@@ -33,25 +34,15 @@ const theme = extendTheme(
 const queryClient = new QueryClient();
 axios.defaults.baseURL = `http://localhost:8000`;
 
-if (typeof window !== "undefined") {
-  axios.defaults.headers.common[
-    "Authorization"
-  ] = `Bearer ${localStorage.getItem("accessToken")}`;
-}
+// setup user service and axios
+setup();
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    // <AuthProvider
-    //   authType="cookie"
-    //   authName="_auth"
-    //   cookieDomain={window.location.hostname}
-    //   cookieSecure={window.location.protocol === "https:"}
-    // >
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
         <Component {...pageProps} />
       </ChakraProvider>
     </QueryClientProvider>
-    // </AuthProvider>
   );
 }
