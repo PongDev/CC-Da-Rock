@@ -230,7 +230,10 @@ export class AuthService {
     }
   }
 
-  async verifyEmail(token: string): Promise<number> {
+  async verifyEmail(token: string): Promise<{
+    email: string;
+    userId: number;
+  }> {
     const verificationEmail =
       await this.verificationEmailRepo.getVerificationEmailFromToken(token);
     // check if email has already been verified
@@ -253,7 +256,7 @@ export class AuthService {
         email: verificationEmail.email,
         emailVerified: true,
       });
-      return verificationEmail.userId;
+      return verificationEmail;
     } else {
       throw new PermissionError(
         'Verification link already expired. Please try resending email option',
