@@ -51,20 +51,26 @@ enum SMEsSize {
 }
 
 model VerificationEmail {
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @unique
-  email     String
-  token     String
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int    @unique
+  email  String
+  token  String
+}
+
+enum TransactionType {
+  CHARGE
+  REFUND
 }
 
 model Transaction {
-  id     Int  @id @default(autoincrement())
-  user   User @relation(fields: [userId], references: [id], onUpdate: Cascade)
-  cf     Int // carbon footprint
-  scc    Int // solar carbon coin
-  amount Int // baht
-  userId Int
-  
+  id              Int             @id @default(autoincrement())
+  user            User            @relation(fields: [userId], references: [id], onUpdate: Cascade)
+  cf              Int // carbon footprint (KgCO2e)
+  scc             Int // solar carbon coin
+  amount          Float // baht
+  transactionType TransactionType
+  userId          Int
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

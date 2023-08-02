@@ -24,7 +24,13 @@ export class TransactionService {
     });
   }
 
-  async purchaseSolarCoins(chargeData: PurchaseSolarCoinsRequestDTO) {
+  async purchaseSolarCoins(chargeData: {
+    amount: number;
+    cf: number;
+    scc: number;
+    userId: number;
+    tokenId: string;
+  }) {
     const user = await this.userRepo.findUniqueUser({ id: chargeData.userId });
     if (!user) {
       throw new RecordNotFound('User not found.');
@@ -35,6 +41,7 @@ export class TransactionService {
       cf: chargeData.cf,
       scc: chargeData.scc,
       userId: chargeData.userId,
+      transactionType: 'CHARGE',
     });
     return transaction;
   }
