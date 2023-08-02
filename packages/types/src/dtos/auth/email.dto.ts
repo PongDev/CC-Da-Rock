@@ -1,7 +1,7 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, OmitType } from "@nestjs/swagger";
 import { IsEmail, IsInt, IsNotEmpty, IsString } from "class-validator";
 
-export class resendEmailDto {
+export class ResendEmailRequestDto {
   @ApiProperty({
     type: () => String,
     required: true,
@@ -23,3 +23,27 @@ export class resendEmailDto {
   @IsNotEmpty()
   id: number;
 }
+
+export class VerifyEmailResponseDto {
+  @ApiProperty({
+    type: () => Boolean,
+    description: "Return true if success.",
+  })
+  success: boolean;
+
+  @ApiProperty({
+    type: () => String,
+    description: "Brief description of the response.",
+  })
+  message: string;
+
+  @ApiProperty({
+    type: () => String,
+    description: "Email.",
+  })
+  email: string;
+}
+
+export class ResendEmailResponseDto extends OmitType(VerifyEmailResponseDto, [
+  "email",
+] as const) {}

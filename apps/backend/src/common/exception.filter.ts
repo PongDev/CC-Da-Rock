@@ -16,6 +16,7 @@ import {
   RecordAlreadyExists,
   RecordNotFound,
   TransactionError,
+  DatabaseError,
 } from './error';
 
 @Catch()
@@ -44,6 +45,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? HttpStatus.INTERNAL_SERVER_ERROR
         : exception instanceof TransactionError
         ? HttpStatus.BAD_GATEWAY
+        : exception instanceof DatabaseError
+        ? HttpStatus.CONFLICT
         : // for native error
         exception instanceof BadRequestException
         ? HttpStatus.BAD_REQUEST
