@@ -64,8 +64,6 @@ export type TransactionControllerGetTransactionsParams = {
 };
 
 export interface PurchaseSolarCoinsRequestDTO {
-  /** User ID */
-  userId: number;
   /** Amount in Thai Baht (thb) */
   amount: number;
   /** Carbon footprint (KgCO2eq) */
@@ -81,11 +79,27 @@ export interface SolarGenerateRequestDTO {
   ccSerial: string;
 }
 
-export interface ResendEmailDto {
+export interface ResendEmailRequestDto {
   /** User's email */
   email: string;
   /** User's id */
   id: number;
+}
+
+export interface ResendEmailResponseDto {
+  /** Return true if success. */
+  success: boolean;
+  /** Brief description of the response. */
+  message: string;
+}
+
+export interface VerifyEmailResponseDto {
+  /** Return true if success. */
+  success: boolean;
+  /** Brief description of the response. */
+  message: string;
+  /** Email. */
+  email: string;
 }
 
 export interface LoginRequest {

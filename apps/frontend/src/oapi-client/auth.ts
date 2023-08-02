@@ -20,7 +20,7 @@ import type {
   RegisterUserRetailRequest,
   RegisterUserSMEsRequest,
   LoginRequest,
-  ResendEmailDto,
+  ResendEmailRequestDto,
 } from "./aPIDocument.schemas";
 
 export const authControllerRegisterRetail = (
@@ -401,21 +401,21 @@ export const useAuthControllerVerify = <
 };
 
 export const authControllerResendEmailVerification = (
-  resendEmailDto: ResendEmailDto,
+  resendEmailRequestDto: ResendEmailRequestDto,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<void>> => {
   return axios.get(`/auth/email/resend`, options);
 };
 
 export const getAuthControllerResendEmailVerificationQueryKey = (
-  resendEmailDto: ResendEmailDto,
-) => [`/auth/email/resend`, resendEmailDto] as const;
+  resendEmailRequestDto: ResendEmailRequestDto,
+) => [`/auth/email/resend`, resendEmailRequestDto] as const;
 
 export const getAuthControllerResendEmailVerificationQueryOptions = <
   TData = Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
   TError = AxiosError<unknown>,
 >(
-  resendEmailDto: ResendEmailDto,
+  resendEmailRequestDto: ResendEmailRequestDto,
   options?: {
     query?: UseQueryOptions<
       Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
@@ -433,12 +433,12 @@ export const getAuthControllerResendEmailVerificationQueryOptions = <
 
   const queryKey =
     queryOptions?.queryKey ??
-    getAuthControllerResendEmailVerificationQueryKey(resendEmailDto);
+    getAuthControllerResendEmailVerificationQueryKey(resendEmailRequestDto);
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof authControllerResendEmailVerification>>
   > = ({ signal }) =>
-    authControllerResendEmailVerification(resendEmailDto, {
+    authControllerResendEmailVerification(resendEmailRequestDto, {
       signal,
       ...axiosOptions,
     });
@@ -456,7 +456,7 @@ export const useAuthControllerResendEmailVerification = <
   TData = Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
   TError = AxiosError<unknown>,
 >(
-  resendEmailDto: ResendEmailDto,
+  resendEmailRequestDto: ResendEmailRequestDto,
   options?: {
     query?: UseQueryOptions<
       Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
@@ -467,7 +467,7 @@ export const useAuthControllerResendEmailVerification = <
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getAuthControllerResendEmailVerificationQueryOptions(
-    resendEmailDto,
+    resendEmailRequestDto,
     options,
   );
 
