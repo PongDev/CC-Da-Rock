@@ -29,8 +29,12 @@ export class TransactionRepo {
     orderBy?: { [key: string]: any };
     take?: number;
     skip?: number;
-  }): Promise<Transaction[]> {
-    return await this.prismaService.transaction.findMany(filter);
+  }): Promise<{ data: Transaction[]; count: number }> {
+    const result = await this.prismaService.$transaction([
+      this.prismaService.transaction.findMany(filter),
+      this.prismaService.transaction.count({ where: filter.where }),
+    ]);
+    return { data: result[0], count: result[1] };
   }
 
   formatFilterDefault(filter: {

@@ -71,7 +71,7 @@ export class TransactionController {
   async getTransactions(
     @User() user: JWTPayload,
     @Query() queryParams: GetTransactionsQueryParams,
-  ): Promise<Transaction[]> {
+  ): Promise<{ data: Transaction[]; count: number }> {
     if (user.role !== RoleType.ADMIN) {
       throw new PermissionError('Unauthorized access.');
     }
@@ -104,7 +104,7 @@ export class TransactionController {
   async getUserTransactions(
     @User() user: JWTPayload,
     @Query() queryParams: GetTransactionsQueryParams,
-  ): Promise<Transaction[]> {
+  ): Promise<{ data: Transaction[]; count: number }> {
     const {
       limit = 10,
       page = 1,

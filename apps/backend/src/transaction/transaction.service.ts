@@ -76,7 +76,7 @@ export class TransactionService {
     sortBy?: string;
     limit?: number;
     page?: number;
-  }): Promise<Transaction[]> {
+  }): Promise<{ data: Transaction[]; count: number }> {
     const formattedFilter = this.transactionRepo.formatFilterDefault(filter);
     return await this.transactionRepo.getTransactions(formattedFilter);
   }
