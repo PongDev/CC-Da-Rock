@@ -5,6 +5,77 @@
  * API Document Description
  * OpenAPI spec version: 1.0
  */
+export type TransactionControllerGetUserTransactionsSortBy =
+  (typeof TransactionControllerGetUserTransactionsSortBy)[keyof typeof TransactionControllerGetUserTransactionsSortBy];
+
+export const TransactionControllerGetUserTransactionsSortBy = {
+  "createdAt+asc": "createdAt+asc",
+  "createdAt+desc": "createdAt+desc",
+  "amount+asc": "amount+asc",
+  "amount+desc": "amount+desc",
+} as const;
+
+export type TransactionControllerGetUserTransactionsParams = {
+  /**
+   * Sort order
+   */
+  sortBy: TransactionControllerGetUserTransactionsSortBy;
+  /**
+   * Time scope
+   */
+  time: string;
+  /**
+   * Page number
+   */
+  page: number;
+  /**
+   * Data per page
+   */
+  limit: number;
+};
+
+export type TransactionControllerGetTransactionsSortBy =
+  (typeof TransactionControllerGetTransactionsSortBy)[keyof typeof TransactionControllerGetTransactionsSortBy];
+
+export const TransactionControllerGetTransactionsSortBy = {
+  "createdAt+asc": "createdAt+asc",
+  "createdAt+desc": "createdAt+desc",
+  "amount+asc": "amount+asc",
+  "amount+desc": "amount+desc",
+} as const;
+
+export type TransactionControllerGetTransactionsParams = {
+  /**
+   * Sort order
+   */
+  sortBy: TransactionControllerGetTransactionsSortBy;
+  /**
+   * Time scope
+   */
+  time: string;
+  /**
+   * Page number
+   */
+  page: number;
+  /**
+   * Data per page
+   */
+  limit: number;
+};
+
+export interface PurchaseSolarCoinsRequestDTO {
+  /** User ID */
+  userId: number;
+  /** Amount in Thai Baht (thb) */
+  amount: number;
+  /** Carbon footprint (KgCO2eq) */
+  cf: number;
+  /** Solar Carbon Coin (coins) */
+  scc: number;
+  /** Omise Token for charging. */
+  tokenId: string;
+}
+
 export interface SolarGenerateRequestDTO {
   /** Carbon Credit Serial Number */
   ccSerial: string;
@@ -21,7 +92,7 @@ export interface LoginRequest {
   /** User's email */
   email?: string;
   /** User's name */
-  name?: number;
+  name?: string;
   /** User's password */
   password: string;
 }
@@ -55,7 +126,7 @@ export interface RegisterUserSMEsRequest {
   /** User's password */
   password: string;
   /** User's name */
-  name: number;
+  name: string;
   /** User's telephone number */
   phone: string;
   /** SMEs' type */
@@ -70,7 +141,7 @@ export interface RegisterUserRetailRequest {
   /** User's password */
   password: string;
   /** User's name */
-  name: number;
+  name: string;
   /** User's telephone number */
   phone: string;
 }
