@@ -31,6 +31,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { AxiosError, isAxiosError } from "axios";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -96,7 +97,7 @@ type LoginFormData = {
 };
 
 const LoginSME = forwardRef<StackProps, "div">((props, ref) => {
-  const { mutateAsync: login } = useLogin();
+  const { mutateAsync: login, isLoading } = useLogin();
   const router = useRouter();
 
   const { register, handleSubmit } = useForm<LoginFormData>();
@@ -147,7 +148,7 @@ const LoginSME = forwardRef<StackProps, "div">((props, ref) => {
         size="lg"
         mt={4}
         type="submit"
-        disabled={isLoading}
+        isLoading={isLoading}
       >
         Login
       </Button>
@@ -287,7 +288,7 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
         color="black"
         size="lg"
         type="submit"
-        disabled={isLoading}
+        isLoading={isLoading}
       >
         Register
       </Button>

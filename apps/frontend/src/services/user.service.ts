@@ -5,8 +5,8 @@ import {
   useAuthControllerLogIn,
 } from "@/oapi-client/auth";
 import axios from "axios";
-import { useState } from "react";
-import type { JWTToken } from "types/";
+import { useMemo, useState } from "react";
+import type { JWTToken, JWTPayload } from "types/";
 import jwt_decode from "jwt-decode";
 
 export async function setup() {
@@ -18,30 +18,27 @@ export async function setup() {
     }
 
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    const decoded = jwt_decode(token);
-    if (
-      decoded !== null &&
-      typeof decoded == "object" &&
-      "exp" in decoded &&
-      typeof decoded.exp == "number"
-    ) {
-      // set a timeout to refresh the token a minute before it expires
-      const timeout = decoded.exp * 1000 - Date.now() - 60 * 1000;
-      console.log("token expires in", timeout);
-      await new Promise((resolve) => setTimeout(resolve, timeout));
-      console.log("refreshing token");
-      const res = await authControllerRefresh({
-        headers: {
-          Authorization: `Bearer ${getRefreshToken()}`,
-        },
-      });
-      const data: JWTToken = res.data;
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${data.accessToken}`;
+    const decoded: JWTPayload = jwt_decode(token);
+    if (!decoded.exp) {
+      throw new Error("Invalid jwt token: missing exp");
     }
+
+    // set a timeout to refresh the token a minute before it expires
+    const timeout = decoded.exp * 1000 - Date.now() - 60 * 1000;
+    console.log("token expires in", timeout);
+    await new Promise((resolve) => setTimeout(resolve, timeout));
+    console.log("refreshing token");
+    const res = await authControllerRefresh({
+      headers: {
+        Authorization: `Bearer ${getRefreshToken()}`,
+      },
+    });
+    const data: JWTToken = res.data;
+    localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem("refreshToken", data.refreshToken);
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${data.accessToken}`;
   }
 }
 
@@ -50,6 +47,14 @@ export function getToken() {
     return null;
   }
   return localStorage.getItem("accessToken");
+}
+
+export function getDecodedToken(): JWTPayload | null {
+  const token = getToken();
+  if (!token) {
+    return null;
+  }
+  return jwt_decode(token);
 }
 
 export function getRefreshToken() {
@@ -65,7 +70,18 @@ export function useToken() {
     setToken(getToken());
   };
 
-  return [token, refresh];
+  return [token, refresh] as const;
+}
+
+export function useDecodedToken() {
+  const [token, refresh] = useToken();
+  const decodedToken = useMemo(() => {
+    if (!token) {
+      return null;
+    }
+    return jwt_decode<JWTPayload>(token);
+  }, [token]);
+  return [decodedToken, refresh] as const;
 }
 
 export function useLogin() {

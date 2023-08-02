@@ -92,14 +92,21 @@ const LoginRetail = forwardRef<StackProps, "div">((props, ref) => {
 
   const { register, handleSubmit } = useForm<LoginFormData>();
   async function onSubmit(data: LoginFormData) {
-    await login({
-      data: {
-        email: data.identity,
-        name: data.identity,
-        password: data.password,
-      },
-    });
-    router.push("/");
+    try {
+      await login({
+        data: {
+          email: data.identity,
+          name: data.identity,
+          password: data.password,
+        },
+      });
+      router.push("/");
+    } catch (e) {
+      console.error(e);
+      if (isAxiosError(e)) {
+        alert(e.message + ":\n" + e.response?.data.message);
+      }
+    }
   }
 
   return (
@@ -131,7 +138,7 @@ const LoginRetail = forwardRef<StackProps, "div">((props, ref) => {
         size="lg"
         mt={4}
         type="submit"
-        disabled={isLoading}
+        isLoading={isLoading}
       >
         Login
       </Button>
@@ -237,7 +244,7 @@ const RegisterRetail = forwardRef<StackProps, "div">((props, ref) => {
         color="black"
         size="lg"
         type="submit"
-        disabled={isLoading}
+        isLoading={isLoading}
       >
         Register
       </Button>
