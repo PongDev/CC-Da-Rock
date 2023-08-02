@@ -23,7 +23,13 @@ import {
 import { User } from './user.decorator';
 import { AuthService } from './auth.service';
 import { JwtRefreshAuthGuard } from './jwt-refresh-auth.guard';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiResponse,
+  ApiResponseProperty,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AllExceptionsFilter } from 'src/common/exception.filter';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import * as database from 'database';
@@ -144,6 +150,7 @@ export class AuthController {
     return await this.authService.profile(user.userId);
   }
 
+  @ApiExtraModels(VerifyEmailResponseDto)
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Successfully verify email.',
@@ -167,6 +174,7 @@ export class AuthController {
     };
   }
 
+  @ApiExtraModels(ResendEmailResponseDto)
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Successfully resend email.',
