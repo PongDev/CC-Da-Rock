@@ -198,7 +198,14 @@ export class AuthService {
       const newEmailToken = await this.creatEmailToken(email, userId);
       let verificationLink;
       if (backendConfig.node_env === 'development') {
-        verificationLink = `${backendConfig.url}:${backendConfig.port}/auth/email/verify/${newEmailToken.token}`;
+        if (
+          backendConfig.url === 'http://localhost' ||
+          backendConfig.url === 'http://127.0.0.1'
+        ) {
+          verificationLink = `${backendConfig.url}:${backendConfig.port}/auth/email/verify/${newEmailToken.token}`;
+        } else {
+          verificationLink = `https://${backendConfig.url}/auth/email/verify/${newEmailToken.token}`;
+        }
       } else {
         verificationLink = `https://${backendConfig.url}/auth/email/verify/${newEmailToken.token}`;
       }
