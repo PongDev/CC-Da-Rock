@@ -200,8 +200,7 @@ export class AuthService {
       if (backendConfig.node_env === 'development') {
         verificationLink = `${backendConfig.url}:${backendConfig.port}/auth/email/verify/${newEmailToken.token}`;
       } else {
-        verificationLink = `${backendConfig.url}/auth/email/verify/${newEmailToken.token}`;
-        // verificationLink = `https://ccdarock-dev-api.pongdev.dev/auth/email/verify/${newEmailToken.token}`
+        verificationLink = `https://${backendConfig.url}/auth/email/verify/${newEmailToken.token}`;
       }
       const transporter = nodemailer.createTransport({
         ...backendConfig.email,
