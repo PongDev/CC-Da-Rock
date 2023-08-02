@@ -211,7 +211,7 @@ export class AuthService {
         subject: 'Verify Email for SolarCC',
         html: `Hi! <br><br> Thank you for register in our service. Your name has been registered as ${
           (await this.profile(userId)).name
-        }.<br><br> <a href='${verificationLink}'>Click here to activate your account</a>`,
+        }.<br><br>Click here to activate your account<br>${verificationLink}`,
       };
       try {
         const emailSent = await transporter.sendMail(mailOptions);
