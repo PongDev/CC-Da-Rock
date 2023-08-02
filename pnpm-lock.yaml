@@ -216,6 +216,9 @@ importers:
       next:
         specifier: ^13.1.1
         version: 13.1.1(react-dom@18.2.0)(react@18.2.0)
+      omise-js-typed:
+        specifier: 2.5.6-revision.3
+        version: 2.5.6-revision.3
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -10511,6 +10514,10 @@ packages:
       call-bind: 1.0.2
       define-properties: 1.2.0
       es-abstract: 1.21.2
+
+  /omise-js-typed@2.5.6-revision.3:
+    resolution: {integrity: sha512-Ul0O3FimhUlckbwsq0JeUTurAQEh9xKTWOtYwepBrPiC7TUAX0WY8Kz7FQ5DfWrOhpNBLl714RKiqrxZLcaaHw==}
+    dev: false
 
   /omise@0.10.1:
     resolution: {integrity: sha512-m6sTD2fZo1nBASnLAzMmEJpcLAArI/ozh2FM6AcnZ55E8S6IQphE2APg8uO8GSBDBUhPnOXACtdg1Fi2yLPGJw==}
