@@ -59,3 +59,10 @@ export class BusinessLogicError extends Error {
     Object.setPrototypeOf(this, BusinessLogicError.prototype);
   }
 }
+
+export class TransactionError extends Error {
+  constructor(msg: string) {
+    super(msg);
+    Object.setPrototypeOf(this, TransactionError.prototype);
+  }
+}

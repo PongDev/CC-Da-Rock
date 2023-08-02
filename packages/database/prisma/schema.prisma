@@ -62,7 +62,11 @@ model Transaction {
   user   User @relation(fields: [userId], references: [id], onUpdate: Cascade)
   cf     Int // carbon footprint
   scc    Int // solar carbon coin
+  amount Int // baht
   userId Int
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model CarbonCreditSerial {
