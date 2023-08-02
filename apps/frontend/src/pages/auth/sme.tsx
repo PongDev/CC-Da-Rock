@@ -1,6 +1,15 @@
 import { FormInput } from "@/components/FormInput";
 import { Header } from "@/components/Header";
 import {
+  RegisterUserSMEsRequestIndustry,
+  RegisterUserSMEsRequestSize,
+} from "@/oapi-client/aPIDocument.schemas";
+import {
+  useAuthControllerLogIn,
+  useAuthControllerRegisterSMEs,
+} from "@/oapi-client/auth";
+import { useLogin } from "@/services/user.service";
+import {
   Box,
   Button,
   Container,
@@ -21,6 +30,7 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
+import { AxiosError, isAxiosError } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -86,10 +96,20 @@ type LoginFormData = {
 };
 
 const LoginSME = forwardRef<StackProps, "div">((props, ref) => {
+  const { mutateAsync: login } = useLogin();
+  const router = useRouter();
+
   const { register, handleSubmit } = useForm<LoginFormData>();
 
-  function onSubmit(data: LoginFormData) {
-    console.log(data);
+  async function onSubmit(data: LoginFormData) {
+    await login({
+      data: {
+        email: data.identity,
+        name: data.identity,
+        password: data.password,
+      },
+    });
+    router.push("/");
   }
 
   return (
@@ -121,7 +141,14 @@ const LoginSME = forwardRef<StackProps, "div">((props, ref) => {
 
       <Spacer />
 
-      <Button colorScheme="green" color="black" size="lg" mt={4} type="submit">
+      <Button
+        colorScheme="green"
+        color="black"
+        size="lg"
+        mt={4}
+        type="submit"
+        disabled={isLoading}
+      >
         Login
       </Button>
     </Stack>
@@ -135,17 +162,38 @@ type RegisterFormData = {
   idNumber: string;
   email: string;
   phone: string;
-  industry: string;
-  size: string;
+  industry: RegisterUserSMEsRequestIndustry;
+  size: RegisterUserSMEsRequestSize;
   password: string;
   confirmPassword: string;
 };
 
 const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
+  const { mutateAsync: registerSME, isLoading } =
+    useAuthControllerRegisterSMEs();
+  const router = useRouter();
+
   const { register, handleSubmit } = useForm<RegisterFormData>();
 
   function onSubmit(data: RegisterFormData) {
-    console.log(data);
+    try {
+      registerSME({
+        data: {
+          email: data.email,
+          password: data.password,
+          name: `${data.firstName} ${data.lastName}`,
+          phone: data.phone,
+          industry: data.industry,
+          size: data.size,
+        },
+      });
+      router.push("/");
+    } catch (e) {
+      console.error(e);
+      if (isAxiosError(e)) {
+        alert(e.message + ":\n" + e.response?.data.message);
+      }
+    }
   }
 
   return (
@@ -197,9 +245,9 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
           required
           {...register("industry")}
         >
-          <option value="manufacture">Manufacture</option>
-          <option value="trade">Trade</option>
-          <option value="service">Service</option>
+          {Object.entries(RegisterUserSMEsRequestIndustry).map(([k, v]) => (
+            <option value={k}>{v.toLowerCase()}</option>
+          ))}
         </Select>
       </FormControl>
 
@@ -213,10 +261,9 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
           required
           {...register("size")}
         >
-          <option value="small">
-            Small (not exceed 50 M baht in total asset)
-          </option>
-          <option value="medium">Medium (51-150 M baht in total asset)</option>
+          {Object.entries(RegisterUserSMEsRequestSize).map(([k, v]) => (
+            <option value={k}>{v.toLowerCase()}</option>
+          ))}
         </Select>
       </FormControl>
 
@@ -235,7 +282,13 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
 
       <Spacer />
 
-      <Button colorScheme="green" color="black" size="lg" type="submit">
+      <Button
+        colorScheme="green"
+        color="black"
+        size="lg"
+        type="submit"
+        disabled={isLoading}
+      >
         Register
       </Button>
     </Stack>

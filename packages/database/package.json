@@ -13,7 +13,8 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push --skip-generate",
     "db:migrate:dev": "prisma migrate dev",
-    "db:migrate:deploy": "prisma migrate deploy"
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:prisma-studio": "prisma studio"
   },
   "main": "dist/index.js",
   "types": "src/index.ts",

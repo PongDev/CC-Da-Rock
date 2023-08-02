@@ -1,0 +1,6 @@
+{
+  "marquee.widgets.npm-stats.packageNames": ["cc-da-rock"],
+  "files.watcherExclude": {
+    "**/target": true
+  }
+}

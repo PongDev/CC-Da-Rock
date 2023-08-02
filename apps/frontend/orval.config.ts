@@ -3,7 +3,7 @@ import { defineConfig } from "orval";
 
 export default defineConfig({
   ccdarock: {
-    input: "http://localhost:8000/api-json",
+    input: "http://localhost:8000/swagger-json",
     output: {
       mode: "tags",
       target: "src/oapi-client",

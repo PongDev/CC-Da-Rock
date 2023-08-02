@@ -14,6 +14,7 @@ import {
   Icon,
   IconButton,
   MenuButton,
+  Skeleton,
   Spacer,
   Stack,
   Text,
@@ -26,6 +27,8 @@ import { FaUserAlt } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Image from "next/image";
 
+import { useAuthControllerProfile } from "@/oapi-client/auth";
+
 interface HeaderProps {}
 
 const navs = [
@@ -37,6 +40,7 @@ const navs = [
 
 export const Header = forwardRef<BoxProps, "div">((props, ref) => {
   const { isOpen, onToggle, onClose } = useDisclosure();
+  const { data: profile, isLoading } = useAuthControllerProfile();
 
   return (
     <Box bg="white" zIndex={100} ref={ref} {...props}>
@@ -60,12 +64,14 @@ export const Header = forwardRef<BoxProps, "div">((props, ref) => {
           ))}
         </HStack>
 
-        <Link href="/auth/choose">
-          <Button colorScheme="green" borderRadius="3xl" gap={2}>
-            <FaUserAlt />
-            Login
-          </Button>
-        </Link>
+        <Skeleton isLoaded={!isLoading}>
+          <Link href="/auth/choose">
+            <Button colorScheme="green" borderRadius="3xl" gap={2}>
+              <FaUserAlt />
+              {profile?.data?.name ?? "Login"}
+            </Button>
+          </Link>
+        </Skeleton>
 
         <IconButton
           color="black"

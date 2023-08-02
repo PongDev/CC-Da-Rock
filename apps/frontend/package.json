@@ -33,6 +33,7 @@
     "eslint-config-custom": "workspace:*",
     "eslint-config-next": "13.0.0",
     "orval": "^6.17.0",
+    "types": "workspace:*",
     "typescript": "4.9.4"
   }
 }

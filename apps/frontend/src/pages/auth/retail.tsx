@@ -1,16 +1,13 @@
 import { FormInput } from "@/components/FormInput";
 import { Header } from "@/components/Header";
+import { useLogin } from "@/services/user.service";
 import {
   Box,
   Button,
   Container,
-  FormControl,
-  FormLabel,
   forwardRef,
   Heading,
   HStack,
-  Input,
-  Select,
   Spacer,
   Stack,
   StackProps,
@@ -22,8 +19,12 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
+import { AxiosError, isAxiosError } from "axios";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+
+import { useAuthControllerRegisterRetail } from "../../oapi-client/auth";
 
 export default function Retail() {
   const [index, setIndex] = useState(0);
@@ -86,10 +87,19 @@ type LoginFormData = {
 };
 
 const LoginRetail = forwardRef<StackProps, "div">((props, ref) => {
-  const { register, handleSubmit } = useForm<LoginFormData>();
+  const { mutateAsync: login, isLoading } = useLogin();
+  const router = useRouter();
 
-  function onSubmit(data: LoginFormData) {
-    console.log(data);
+  const { register, handleSubmit } = useForm<LoginFormData>();
+  async function onSubmit(data: LoginFormData) {
+    await login({
+      data: {
+        email: data.identity,
+        name: data.identity,
+        password: data.password,
+      },
+    });
+    router.push("/");
   }
 
   return (
@@ -115,7 +125,14 @@ const LoginRetail = forwardRef<StackProps, "div">((props, ref) => {
 
       <Spacer />
 
-      <Button colorScheme="green" color="black" size="lg" mt={4} type="submit">
+      <Button
+        colorScheme="green"
+        color="black"
+        size="lg"
+        mt={4}
+        type="submit"
+        disabled={isLoading}
+      >
         Login
       </Button>
     </Stack>
@@ -134,10 +151,29 @@ type RegisterFormData = {
 };
 
 const RegisterRetail = forwardRef<StackProps, "div">((props, ref) => {
+  const { mutateAsync: registerRetail, isLoading } =
+    useAuthControllerRegisterRetail();
+  const router = useRouter();
+
   const { register, handleSubmit } = useForm<RegisterFormData>();
 
-  function onSubmit(data: RegisterFormData) {
-    console.log(data);
+  async function onSubmit(data: RegisterFormData) {
+    try {
+      await registerRetail({
+        data: {
+          email: data.email,
+          password: data.password,
+          name: `${data.firstName} ${data.lastName}`,
+          phone: data.phoneNumber,
+        },
+      });
+      router.push("/");
+    } catch (e) {
+      console.error(e);
+      if (isAxiosError(e)) {
+        alert(e.message + ":\n" + e.response?.data.message);
+      }
+    }
   }
 
   return (
@@ -196,7 +232,13 @@ const RegisterRetail = forwardRef<StackProps, "div">((props, ref) => {
 
       <Spacer />
 
-      <Button colorScheme="green" color="black" size="lg" type="submit">
+      <Button
+        colorScheme="green"
+        color="black"
+        size="lg"
+        type="submit"
+        disabled={isLoading}
+      >
         Register
       </Button>
     </Stack>
