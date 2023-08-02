@@ -15,6 +15,7 @@ import {
   PermissionError,
   RecordAlreadyExists,
   RecordNotFound,
+  TransactionError,
 } from './error';
 
 @Catch()
@@ -41,6 +42,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? HttpStatus.BAD_REQUEST
         : exception instanceof BusinessLogicError
         ? HttpStatus.INTERNAL_SERVER_ERROR
+        : exception instanceof TransactionError
+        ? HttpStatus.BAD_GATEWAY
         : // for native error
         exception instanceof BadRequestException
         ? HttpStatus.BAD_REQUEST

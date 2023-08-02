@@ -42,6 +42,10 @@ export type BackendConfig = {
       pass: string;
     };
   };
+  omise: {
+    publicKey: string;
+    secretKey: string;
+  };
 };
 
 export const loadBackendConfig = (): BackendConfig => {
@@ -112,6 +116,10 @@ export const loadBackendConfig = (): BackendConfig => {
         user: process.env.EMAIL_AUTH_USER || "default@gmail.com",
         pass: process.env.EMAIL_AUTH_PASS || "default_password",
       },
+    },
+    omise: {
+      publicKey: process.env.OMISE_PUBLIC_KEY || "missing",
+      secretKey: process.env.OMISE_SECRET_KEY || "missing",
     },
   };
 };
