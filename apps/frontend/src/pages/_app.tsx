@@ -27,7 +27,7 @@ const theme = extendTheme(
       },
     },
   },
-  withDefaultColorScheme({ colorScheme: "brand" }),
+  withDefaultColorScheme({ colorScheme: "green" }),
 );
 
 const queryClient = new QueryClient();
