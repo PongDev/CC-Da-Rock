@@ -82,6 +82,8 @@ export const Header = forwardRef<BoxProps, "div">((props, ref) => {
         <IconButton
           color="black"
           aria-label="menu"
+          bg="transparent"
+          colorScheme="blackAlpha"
           icon={<GiHamburgerMenu size={32} />}
           onClick={onToggle}
         />

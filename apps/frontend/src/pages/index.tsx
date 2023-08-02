@@ -19,7 +19,7 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { Link } from "@chakra-ui/next-js";
+import { Image, Link } from "@chakra-ui/next-js";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -116,17 +116,21 @@ export default function Home() {
 
         <VStack textAlign="center" p={16} m="auto" bg="#FFED9433">
           <Heading fontWeight="bold">What Solar CC Can Do</Heading>
-          <Wrap spacing={10} justify="center" p={16}>
-            <WrapItem>
-              <Box w={256} h={256} bg="blue.200" />
+          <Wrap spacing={64} justify="center" p={16}>
+            <WrapItem flexDirection="column" gap={4}>
+              <Img boxSize={192} objectFit="contain" src="/landing/car.png" />
+              <Heading size="md">Offset Transportation</Heading>
             </WrapItem>
-            <WrapItem>
-              <Box w={256} h={256} bg="blue.200" />
+            <WrapItem flexDirection="column" gap={4}>
+              <Img boxSize={192} objectFit="contain" src="/landing/hotel.png" />
+              <Heading size="md">Offset Your Activity</Heading>
             </WrapItem>
           </Wrap>
 
           <Text>and much more</Text>
-          <Button size="lg">Explore Our Project</Button>
+          <Button size="lg" px={32} bg="black" colorScheme="blackAlpha">
+            Explore
+          </Button>
         </VStack>
 
         <VStack textAlign="center" p={16} m="auto" bg="#9DC17766">
