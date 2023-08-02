@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Transaction } from 'database';
+import { Transaction, TransactionType } from 'database';
 
 @Injectable()
 export class TransactionRepo {
@@ -11,7 +11,7 @@ export class TransactionRepo {
     cf: number;
     scc: number;
     amount: number; // thb
-    // transactionType: TransactionType
+    transactionType: TransactionType;
   }) {
     return await this.prismaService.transaction.create({
       data: {
@@ -19,6 +19,7 @@ export class TransactionRepo {
         cf: data.cf,
         scc: data.scc,
         amount: data.amount,
+        transactionType: data.transactionType,
         // transactionType: data.transactionType,
       },
     });

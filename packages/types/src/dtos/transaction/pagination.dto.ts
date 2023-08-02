@@ -23,7 +23,7 @@ export class GetTransactionsQueryParams {
   @ApiProperty({
     type: () => Number,
     description: "Page number",
-    example: "10",
+    example: "1",
   })
   @IsOptional()
   @Type(() => Number)

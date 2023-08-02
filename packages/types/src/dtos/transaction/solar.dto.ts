@@ -5,18 +5,8 @@ export class PurchaseSolarCoinsRequestDTO {
   @ApiProperty({
     type: () => Number,
     required: true,
-    description: "User ID",
-    example: "1",
-  })
-  @IsNumber()
-  @IsNotEmpty()
-  userId: number;
-
-  @ApiProperty({
-    type: () => Number,
-    required: true,
     description: "Amount in Thai Baht (thb)",
-    example: "100",
+    example: "100.50",
   })
   @IsNumber()
   @IsNotEmpty()

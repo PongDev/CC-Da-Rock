@@ -16,12 +16,20 @@ import {
   RegisterUserResponse,
   RegisterUserRetailRequest,
   RegisterUserSMEsRequest,
-  resendEmailDto,
+  ResendEmailRequestDto,
+  ResendEmailResponseDto,
+  VerifyEmailResponseDto,
 } from 'types';
 import { User } from './user.decorator';
 import { AuthService } from './auth.service';
 import { JwtRefreshAuthGuard } from './jwt-refresh-auth.guard';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiResponse,
+  ApiResponseProperty,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AllExceptionsFilter } from 'src/common/exception.filter';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import * as database from 'database';
@@ -142,6 +150,7 @@ export class AuthController {
     return await this.authService.profile(user.userId);
   }
 
+  @ApiExtraModels(VerifyEmailResponseDto)
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Successfully verify email.',
@@ -156,11 +165,16 @@ export class AuthController {
   })
   @Get('email/verify/:token')
   @HttpCode(HttpStatus.OK)
-  async verify(@Param('token') token: string): Promise<string> {
+  async verify(@Param('token') token: string): Promise<VerifyEmailResponseDto> {
     const verifiedUserId = await this.authService.verifyEmail(token);
-    return 'successfully verify email';
+    return {
+      success: true,
+      message: 'Successfully verify email.',
+      email: verifiedUserId.email,
+    };
   }
 
+  @ApiExtraModels(ResendEmailResponseDto)
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Successfully resend email.',
@@ -171,13 +185,18 @@ export class AuthController {
   })
   @Get('email/resend')
   @HttpCode(HttpStatus.OK)
-  async resendEmailVerification(@Body() data: resendEmailDto): Promise<string> {
+  async resendEmailVerification(
+    @Body() data: ResendEmailRequestDto,
+  ): Promise<ResendEmailResponseDto> {
     const isEmailSent = await this.authService.resendVerificationEmail(
       data.email,
       data.id,
     );
     if (isEmailSent) {
-      return 'Email has been sent.';
+      return {
+        success: true,
+        message: 'Email has been sent.',
+      };
     } else {
       throw new EmailNotSentError('Email not sent.');
     }

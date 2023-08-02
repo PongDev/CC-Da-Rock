@@ -51,9 +51,13 @@ export class TransactionController {
   @UseGuards(JwtAuthGuard)
   @Post('solarcoins/purchase')
   async purchaseSolarCoins(
+    @User() user: JWTPayload,
     @Body() chargeData: PurchaseSolarCoinsRequestDTO,
   ): Promise<Transaction> {
-    return await this.transactionService.purchaseSolarCoins(chargeData);
+    return await this.transactionService.purchaseSolarCoins({
+      userId: user.userId,
+      ...chargeData,
+    });
   }
 
   @ApiResponse({
