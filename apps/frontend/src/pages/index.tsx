@@ -89,29 +89,45 @@ export default function Home() {
               </Text>
 
               <ButtonGroup p="6vw" display="flex" gap={8} colorScheme="green">
-                <Button
-                  as={Link}
-                  color="black"
-                  borderRadius="full"
-                  width={150}
-                  size="lg"
-                  href={"/auth/retail"}
-                  border="2px solid black"
-                >
-                  <Text fontSize="xl">Individuals</Text>
-                </Button>
+                {token ? (
+                  <Button
+                    as={Link}
+                    color="black"
+                    borderRadius="full"
+                    width={150}
+                    size="lg"
+                    href="/store/solar-cc"
+                    border="2px solid black"
+                  >
+                    <Text fontSize="xl">Buy Offset</Text>
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      as={Link}
+                      color="black"
+                      borderRadius="full"
+                      width={150}
+                      size="lg"
+                      href={"/auth/retail"}
+                      border="2px solid black"
+                    >
+                      <Text fontSize="xl">Individuals</Text>
+                    </Button>
 
-                <Button
-                  as={Link}
-                  color="black"
-                  borderRadius="full"
-                  width={150}
-                  size="lg"
-                  href={"/auth/sme"}
-                  border="2px solid black"
-                >
-                  <Text>SMEs</Text>
-                </Button>
+                    <Button
+                      as={Link}
+                      color="black"
+                      borderRadius="full"
+                      width={150}
+                      size="lg"
+                      href={"/auth/sme"}
+                      border="2px solid black"
+                    >
+                      <Text>SMEs</Text>
+                    </Button>
+                  </>
+                )}
               </ButtonGroup>
             </VStack>
           </Container>
