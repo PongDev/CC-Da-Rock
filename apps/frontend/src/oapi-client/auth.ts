@@ -25,18 +25,18 @@ import type {
 
 export const authControllerRegisterRetail = (
   registerUserRetailRequest: RegisterUserRetailRequest,
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.post(
     `/auth/register/retail`,
     registerUserRetailRequest,
-    options,
+    options
   );
 };
 
 export const getAuthControllerRegisterRetailMutationOptions = <
   TError = AxiosError<unknown>,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authControllerRegisterRetail>>,
@@ -74,7 +74,7 @@ export type AuthControllerRegisterRetailMutationError = AxiosError<unknown>;
 
 export const useAuthControllerRegisterRetail = <
   TError = AxiosError<unknown>,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authControllerRegisterRetail>>,
@@ -91,14 +91,14 @@ export const useAuthControllerRegisterRetail = <
 };
 export const authControllerRegisterSMEs = (
   registerUserSMEsRequest: RegisterUserSMEsRequest,
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.post(`/auth/register/SMEs`, registerUserSMEsRequest, options);
 };
 
 export const getAuthControllerRegisterSMEsMutationOptions = <
   TError = AxiosError<unknown>,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authControllerRegisterSMEs>>,
@@ -135,7 +135,7 @@ export type AuthControllerRegisterSMEsMutationError = AxiosError<unknown>;
 
 export const useAuthControllerRegisterSMEs = <
   TError = AxiosError<unknown>,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authControllerRegisterSMEs>>,
@@ -151,14 +151,14 @@ export const useAuthControllerRegisterSMEs = <
 };
 export const authControllerLogIn = (
   loginRequest: LoginRequest,
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.post(`/auth/login`, loginRequest, options);
 };
 
 export const getAuthControllerLogInMutationOptions = <
   TError = AxiosError<unknown>,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authControllerLogIn>>,
@@ -195,7 +195,7 @@ export type AuthControllerLogInMutationError = AxiosError<unknown>;
 
 export const useAuthControllerLogIn = <
   TError = AxiosError<unknown>,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authControllerLogIn>>,
@@ -210,7 +210,7 @@ export const useAuthControllerLogIn = <
   return useMutation(mutationOptions);
 };
 export const authControllerRefresh = (
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.post(`/auth/refresh`, undefined, options);
 };
@@ -218,7 +218,7 @@ export const authControllerRefresh = (
 export const getAuthControllerRefreshMutationOptions = <
   TError = AxiosError<unknown>,
   TVariables = void,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authControllerRefresh>>,
@@ -254,7 +254,7 @@ export type AuthControllerRefreshMutationError = AxiosError<unknown>;
 export const useAuthControllerRefresh = <
   TError = AxiosError<unknown>,
   TVariables = void,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authControllerRefresh>>,
@@ -269,7 +269,7 @@ export const useAuthControllerRefresh = <
   return useMutation(mutationOptions);
 };
 export const authControllerProfile = (
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.get(`/auth/profile`, options);
 };
@@ -279,7 +279,7 @@ export const getAuthControllerProfileQueryKey = () =>
 
 export const getAuthControllerProfileQueryOptions = <
   TData = Awaited<ReturnType<typeof authControllerProfile>>,
-  TError = AxiosError<unknown>,
+  TError = AxiosError<unknown>
 >(options?: {
   query?: UseQueryOptions<
     Awaited<ReturnType<typeof authControllerProfile>>,
@@ -310,7 +310,7 @@ export type AuthControllerProfileQueryError = AxiosError<unknown>;
 
 export const useAuthControllerProfile = <
   TData = Awaited<ReturnType<typeof authControllerProfile>>,
-  TError = AxiosError<unknown>,
+  TError = AxiosError<unknown>
 >(options?: {
   query?: UseQueryOptions<
     Awaited<ReturnType<typeof authControllerProfile>>,
@@ -332,7 +332,7 @@ export const useAuthControllerProfile = <
 
 export const authControllerVerify = (
   token: string,
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.get(`/auth/email/verify/${token}`, options);
 };
@@ -342,7 +342,7 @@ export const getAuthControllerVerifyQueryKey = (token: string) =>
 
 export const getAuthControllerVerifyQueryOptions = <
   TData = Awaited<ReturnType<typeof authControllerVerify>>,
-  TError = AxiosError<unknown>,
+  TError = AxiosError<unknown>
 >(
   token: string,
   options?: {
@@ -352,7 +352,7 @@ export const getAuthControllerVerifyQueryOptions = <
       TData
     >;
     axios?: AxiosRequestConfig;
-  },
+  }
 ): UseQueryOptions<
   Awaited<ReturnType<typeof authControllerVerify>>,
   TError,
@@ -377,7 +377,7 @@ export type AuthControllerVerifyQueryError = AxiosError<unknown>;
 
 export const useAuthControllerVerify = <
   TData = Awaited<ReturnType<typeof authControllerVerify>>,
-  TError = AxiosError<unknown>,
+  TError = AxiosError<unknown>
 >(
   token: string,
   options?: {
@@ -387,7 +387,7 @@ export const useAuthControllerVerify = <
       TData
     >;
     axios?: AxiosRequestConfig;
-  },
+  }
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getAuthControllerVerifyQueryOptions(token, options);
 
@@ -402,14 +402,14 @@ export const useAuthControllerVerify = <
 
 export const authControllerResendEmailVerification = (
   resendEmailRequestDto: ResendEmailRequestDto,
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.get(`/auth/email/resend`, options);
 };
 
 export const getAuthControllerResendEmailVerificationMutationOptions = <
   TError = AxiosError<unknown>,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
@@ -448,7 +448,7 @@ export type AuthControllerResendEmailVerificationMutationError =
 
 export const useAuthControllerResendEmailVerification = <
   TError = AxiosError<unknown>,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authControllerResendEmailVerification>>,

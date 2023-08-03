@@ -25,7 +25,7 @@ export default defineConfig({
           const content = readFileSync(path, "utf-8");
           const newContent = content.replaceAll(
             "// eslint-disable-next-line @typescript-eslint/no-redeclare",
-            "",
+            ""
           );
           writeFileSync(path, newContent);
         });

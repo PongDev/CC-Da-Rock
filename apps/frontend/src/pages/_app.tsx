@@ -26,7 +26,7 @@ const theme = extendTheme(
       },
     },
   },
-  withDefaultColorScheme({ colorScheme: "green" }),
+  withDefaultColorScheme({ colorScheme: "green" })
 );
 
 const queryClient = new QueryClient();

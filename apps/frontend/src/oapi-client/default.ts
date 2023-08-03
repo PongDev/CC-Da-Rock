@@ -16,7 +16,7 @@ import type {
 } from "@tanstack/react-query";
 
 export const appControllerGetHello = (
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.get(`/`, options);
 };
@@ -25,7 +25,7 @@ export const getAppControllerGetHelloQueryKey = () => [`/`] as const;
 
 export const getAppControllerGetHelloQueryOptions = <
   TData = Awaited<ReturnType<typeof appControllerGetHello>>,
-  TError = AxiosError<unknown>,
+  TError = AxiosError<unknown>
 >(options?: {
   query?: UseQueryOptions<
     Awaited<ReturnType<typeof appControllerGetHello>>,
@@ -56,7 +56,7 @@ export type AppControllerGetHelloQueryError = AxiosError<unknown>;
 
 export const useAppControllerGetHello = <
   TData = Awaited<ReturnType<typeof appControllerGetHello>>,
-  TError = AxiosError<unknown>,
+  TError = AxiosError<unknown>
 >(options?: {
   query?: UseQueryOptions<
     Awaited<ReturnType<typeof appControllerGetHello>>,

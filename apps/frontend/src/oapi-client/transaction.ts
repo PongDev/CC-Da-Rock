@@ -24,18 +24,18 @@ import type {
 
 export const transactionControllerPurchaseSolarCoins = (
   purchaseSolarCoinsRequestDTO: PurchaseSolarCoinsRequestDTO,
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.post(
     `/transaction/solarcoins/purchase`,
     purchaseSolarCoinsRequestDTO,
-    options,
+    options
   );
 };
 
 export const getTransactionControllerPurchaseSolarCoinsMutationOptions = <
   TError = AxiosError<unknown>,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof transactionControllerPurchaseSolarCoins>>,
@@ -74,7 +74,7 @@ export type TransactionControllerPurchaseSolarCoinsMutationError =
 
 export const useTransactionControllerPurchaseSolarCoins = <
   TError = AxiosError<unknown>,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof transactionControllerPurchaseSolarCoins>>,
@@ -91,7 +91,7 @@ export const useTransactionControllerPurchaseSolarCoins = <
 };
 export const transactionControllerGetTransactions = (
   params?: TransactionControllerGetTransactionsParams,
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.get(`/transaction/all`, {
     ...options,
@@ -100,12 +100,12 @@ export const transactionControllerGetTransactions = (
 };
 
 export const getTransactionControllerGetTransactionsQueryKey = (
-  params?: TransactionControllerGetTransactionsParams,
+  params?: TransactionControllerGetTransactionsParams
 ) => [`/transaction/all`, ...(params ? [params] : [])] as const;
 
 export const getTransactionControllerGetTransactionsQueryOptions = <
   TData = Awaited<ReturnType<typeof transactionControllerGetTransactions>>,
-  TError = AxiosError<unknown>,
+  TError = AxiosError<unknown>
 >(
   params?: TransactionControllerGetTransactionsParams,
   options?: {
@@ -115,7 +115,7 @@ export const getTransactionControllerGetTransactionsQueryOptions = <
       TData
     >;
     axios?: AxiosRequestConfig;
-  },
+  }
 ): UseQueryOptions<
   Awaited<ReturnType<typeof transactionControllerGetTransactions>>,
   TError,
@@ -143,7 +143,7 @@ export type TransactionControllerGetTransactionsQueryError =
 
 export const useTransactionControllerGetTransactions = <
   TData = Awaited<ReturnType<typeof transactionControllerGetTransactions>>,
-  TError = AxiosError<unknown>,
+  TError = AxiosError<unknown>
 >(
   params?: TransactionControllerGetTransactionsParams,
   options?: {
@@ -153,11 +153,11 @@ export const useTransactionControllerGetTransactions = <
       TData
     >;
     axios?: AxiosRequestConfig;
-  },
+  }
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getTransactionControllerGetTransactionsQueryOptions(
     params,
-    options,
+    options
   );
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
@@ -171,7 +171,7 @@ export const useTransactionControllerGetTransactions = <
 
 export const transactionControllerGetUserTransactions = (
   params?: TransactionControllerGetUserTransactionsParams,
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.get(`/transaction`, {
     ...options,
@@ -180,12 +180,12 @@ export const transactionControllerGetUserTransactions = (
 };
 
 export const getTransactionControllerGetUserTransactionsQueryKey = (
-  params?: TransactionControllerGetUserTransactionsParams,
+  params?: TransactionControllerGetUserTransactionsParams
 ) => [`/transaction`, ...(params ? [params] : [])] as const;
 
 export const getTransactionControllerGetUserTransactionsQueryOptions = <
   TData = Awaited<ReturnType<typeof transactionControllerGetUserTransactions>>,
-  TError = AxiosError<unknown>,
+  TError = AxiosError<unknown>
 >(
   params?: TransactionControllerGetUserTransactionsParams,
   options?: {
@@ -195,7 +195,7 @@ export const getTransactionControllerGetUserTransactionsQueryOptions = <
       TData
     >;
     axios?: AxiosRequestConfig;
-  },
+  }
 ): UseQueryOptions<
   Awaited<ReturnType<typeof transactionControllerGetUserTransactions>>,
   TError,
@@ -226,7 +226,7 @@ export type TransactionControllerGetUserTransactionsQueryError =
 
 export const useTransactionControllerGetUserTransactions = <
   TData = Awaited<ReturnType<typeof transactionControllerGetUserTransactions>>,
-  TError = AxiosError<unknown>,
+  TError = AxiosError<unknown>
 >(
   params?: TransactionControllerGetUserTransactionsParams,
   options?: {
@@ -236,11 +236,11 @@ export const useTransactionControllerGetUserTransactions = <
       TData
     >;
     axios?: AxiosRequestConfig;
-  },
+  }
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getTransactionControllerGetUserTransactionsQueryOptions(
     params,
-    options,
+    options
   );
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {

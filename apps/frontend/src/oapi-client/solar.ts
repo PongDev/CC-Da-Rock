@@ -20,14 +20,14 @@ import type { SolarGenerateRequestDTO } from "./aPIDocument.schemas";
 
 export const solarControllerGenerateSolar = (
   solarGenerateRequestDTO: SolarGenerateRequestDTO,
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.post(`/solar/generate`, solarGenerateRequestDTO, options);
 };
 
 export const getSolarControllerGenerateSolarMutationOptions = <
   TError = AxiosError<unknown>,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof solarControllerGenerateSolar>>,
@@ -64,7 +64,7 @@ export type SolarControllerGenerateSolarMutationError = AxiosError<unknown>;
 
 export const useSolarControllerGenerateSolar = <
   TError = AxiosError<unknown>,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof solarControllerGenerateSolar>>,
@@ -80,7 +80,7 @@ export const useSolarControllerGenerateSolar = <
   return useMutation(mutationOptions);
 };
 export const solarControllerBurnSolar = (
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.post(`/solar/burn`, undefined, options);
 };
@@ -88,7 +88,7 @@ export const solarControllerBurnSolar = (
 export const getSolarControllerBurnSolarMutationOptions = <
   TError = AxiosError<unknown>,
   TVariables = void,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof solarControllerBurnSolar>>,
@@ -124,7 +124,7 @@ export type SolarControllerBurnSolarMutationError = AxiosError<unknown>;
 export const useSolarControllerBurnSolar = <
   TError = AxiosError<unknown>,
   TVariables = void,
-  TContext = unknown,
+  TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof solarControllerBurnSolar>>,
@@ -139,7 +139,7 @@ export const useSolarControllerBurnSolar = <
   return useMutation(mutationOptions);
 };
 export const solarControllerCountBurnedSolar = (
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
   return axios.get(`/solar/count-burned-solar`, options);
 };
@@ -149,7 +149,7 @@ export const getSolarControllerCountBurnedSolarQueryKey = () =>
 
 export const getSolarControllerCountBurnedSolarQueryOptions = <
   TData = Awaited<ReturnType<typeof solarControllerCountBurnedSolar>>,
-  TError = AxiosError<unknown>,
+  TError = AxiosError<unknown>
 >(options?: {
   query?: UseQueryOptions<
     Awaited<ReturnType<typeof solarControllerCountBurnedSolar>>,
@@ -182,7 +182,7 @@ export type SolarControllerCountBurnedSolarQueryError = AxiosError<unknown>;
 
 export const useSolarControllerCountBurnedSolar = <
   TData = Awaited<ReturnType<typeof solarControllerCountBurnedSolar>>,
-  TError = AxiosError<unknown>,
+  TError = AxiosError<unknown>
 >(options?: {
   query?: UseQueryOptions<
     Awaited<ReturnType<typeof solarControllerCountBurnedSolar>>,

@@ -64,6 +64,7 @@ enum TransactionType {
 
 model Transaction {
   id              Int             @id @default(autoincrement())
+  serialID        String          @unique @default(uuid())
   user            User            @relation(fields: [userId], references: [id], onUpdate: Cascade)
   cf              Int // carbon footprint (KgCO2e)
   scc             Int // solar carbon coin
