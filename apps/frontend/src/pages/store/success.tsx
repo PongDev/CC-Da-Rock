@@ -36,8 +36,7 @@ export default function Success() {
 
           <VStack gap={8}>
             <Heading size="md">Thank You For Saving the World With Us</Heading>
-            {/* TODO: set href */}
-            <Button as={Link} href="/" size="lg" width="60%">
+            <Button as={Link} href="/portfolio/history" size="lg" width="60%">
               See My Order
             </Button>
             <Button as={Link} href="/" size="lg" width="60%">
