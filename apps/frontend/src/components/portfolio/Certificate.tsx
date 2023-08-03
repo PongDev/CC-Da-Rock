@@ -46,7 +46,7 @@ export const Certificate = forwardRef<CertificateProps, "div">((props, ref) => {
             <Text color="green.500" display="inline-block" fontWeight="bold">
               {props.tC02}
             </Text>{" "}
-            tCO2eq of Carbon Footprint
+            kCO2eq of Carbon Footprint
           </Text>
           <Text>
             Date:{" "}
