@@ -9,6 +9,15 @@ export default defineConfig({
       target: "src/oapi-client",
       client: "react-query",
       clean: ["src/oapi-client/*"],
+      override: {
+        operations: {
+          AuthController_resendEmailVerification: {
+            query: {
+              useMutation: true,
+            },
+          },
+        },
+      },
     },
     hooks: {
       afterAllFilesWrite: (paths: string[]) => {

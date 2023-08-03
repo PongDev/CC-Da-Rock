@@ -407,75 +407,59 @@ export const authControllerResendEmailVerification = (
   return axios.get(`/auth/email/resend`, options);
 };
 
-export const getAuthControllerResendEmailVerificationQueryKey = (
-  resendEmailRequestDto: ResendEmailRequestDto,
-) => [`/auth/email/resend`, resendEmailRequestDto] as const;
-
-export const getAuthControllerResendEmailVerificationQueryOptions = <
-  TData = Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
+export const getAuthControllerResendEmailVerificationMutationOptions = <
   TError = AxiosError<unknown>,
->(
-  resendEmailRequestDto: ResendEmailRequestDto,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
-      TError,
-      TData
-    >;
-    axios?: AxiosRequestConfig;
-  },
-): UseQueryOptions<
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
+    TError,
+    { data: ResendEmailRequestDto },
+    TContext
+  >;
+  axios?: AxiosRequestConfig;
+}): UseMutationOptions<
   Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
   TError,
-  TData
-> & { queryKey: QueryKey } => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  { data: ResendEmailRequestDto },
+  TContext
+> => {
+  const { mutation: mutationOptions, axios: axiosOptions } = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getAuthControllerResendEmailVerificationQueryKey(resendEmailRequestDto);
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
+    { data: ResendEmailRequestDto }
+  > = (props) => {
+    const { data } = props ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof authControllerResendEmailVerification>>
-  > = ({ signal }) =>
-    authControllerResendEmailVerification(resendEmailRequestDto, {
-      signal,
-      ...axiosOptions,
-    });
+    return authControllerResendEmailVerification(data, axiosOptions);
+  };
 
-  return { queryKey, queryFn, ...queryOptions };
+  return { mutationFn, ...mutationOptions };
 };
 
-export type AuthControllerResendEmailVerificationQueryResult = NonNullable<
+export type AuthControllerResendEmailVerificationMutationResult = NonNullable<
   Awaited<ReturnType<typeof authControllerResendEmailVerification>>
 >;
-export type AuthControllerResendEmailVerificationQueryError =
+export type AuthControllerResendEmailVerificationMutationBody =
+  ResendEmailRequestDto;
+export type AuthControllerResendEmailVerificationMutationError =
   AxiosError<unknown>;
 
 export const useAuthControllerResendEmailVerification = <
-  TData = Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
   TError = AxiosError<unknown>,
->(
-  resendEmailRequestDto: ResendEmailRequestDto,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
-      TError,
-      TData
-    >;
-    axios?: AxiosRequestConfig;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-  const queryOptions = getAuthControllerResendEmailVerificationQueryOptions(
-    resendEmailRequestDto,
-    options,
-  );
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof authControllerResendEmailVerification>>,
+    TError,
+    { data: ResendEmailRequestDto },
+    TContext
+  >;
+  axios?: AxiosRequestConfig;
+}) => {
+  const mutationOptions =
+    getAuthControllerResendEmailVerificationMutationOptions(options);
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
-
-  query.queryKey = queryOptions.queryKey;
-
-  return query;
+  return useMutation(mutationOptions);
 };

@@ -176,9 +176,9 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
 
   const { register, handleSubmit } = useForm<RegisterFormData>();
 
-  function onSubmit(data: RegisterFormData) {
+  async function onSubmit(data: RegisterFormData) {
     try {
-      registerSME({
+      const res = await registerSME({
         data: {
           email: data.email,
           password: data.password,
@@ -188,7 +188,11 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
           size: data.size,
         },
       });
-      router.push("/");
+
+      router.push({
+        pathname: "/auth/email-verify",
+        query: { email: data.email, uid: res.data.id },
+      });
     } catch (e) {
       console.error(e);
       if (isAxiosError(e)) {

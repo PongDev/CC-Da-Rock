@@ -166,7 +166,7 @@ const RegisterRetail = forwardRef<StackProps, "div">((props, ref) => {
 
   async function onSubmit(data: RegisterFormData) {
     try {
-      await registerRetail({
+      const res = await registerRetail({
         data: {
           email: data.email,
           password: data.password,
@@ -174,7 +174,11 @@ const RegisterRetail = forwardRef<StackProps, "div">((props, ref) => {
           phone: data.phoneNumber,
         },
       });
-      router.push("/");
+
+      router.push({
+        pathname: "/auth/email-verify",
+        query: { email: data.email, uid: res.data.id },
+      });
     } catch (e) {
       console.error(e);
       if (isAxiosError(e)) {
