@@ -35,7 +35,7 @@ export default function Success() {
               size="lg"
               letterSpacing={0.3}
             >
-              Congratulations on successfully registering. you have become an
+              Congratulations on successfully registration. you have become an
               essential part of our mission to save the world.
             </Text>
           </VStack>
