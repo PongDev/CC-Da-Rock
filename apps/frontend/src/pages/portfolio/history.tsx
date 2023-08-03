@@ -54,6 +54,8 @@ export default function History() {
     return <Progress isIndeterminate={true} />;
   }
 
+  console.log(transactions);
+
   return (
     <>
       <Header />
@@ -83,6 +85,7 @@ export default function History() {
         {id !== undefined && (
           <TransactionInfo
             no={selected.id}
+            serial={selected.serialID}
             date={selected.createdAt}
             amount={selected.amount}
             cf={selected.cf}
@@ -134,6 +137,7 @@ const TransactionCard = forwardRef<
 });
 
 const TransactionInfo = (props: {
+  serial: string;
   no: number;
   date: string;
   cf: number;
@@ -213,6 +217,7 @@ const TransactionInfo = (props: {
         <Divider borderWidth={2} />
 
         <Certificate
+          serial={props.serial}
           name={profile?.data.name}
           tC02={props.cf}
           date={formattedDate}

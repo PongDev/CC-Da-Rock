@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 
 type CertificateProps = Omit<BoxProps, "src" | "alt" | "width" | "height"> & {
+  serial: string;
   name: string;
   tC02: number;
   date: string;
@@ -55,6 +56,12 @@ export const Certificate = forwardRef<CertificateProps, "div">((props, ref) => {
             </Text>
           </Text>
         </VStack>
+      </Box>
+
+      <Box position="absolute" top={8} left={8}>
+        <Text fontSize="2xs" color="gray.300" fontWeight="light">
+          {props.serial}
+        </Text>
       </Box>
     </Box>
   );
