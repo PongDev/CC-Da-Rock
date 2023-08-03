@@ -210,6 +210,9 @@ importers:
       framer-motion:
         specifier: ^10.12.18
         version: 10.12.18(react-dom@18.2.0)(react@18.2.0)
+      html-to-image:
+        specifier: ^1.11.11
+        version: 1.11.11
       jwt-decode:
         specifier: ^3.1.2
         version: 3.1.2
@@ -8052,6 +8055,10 @@ packages:
       param-case: 2.1.1
       relateurl: 0.2.7
       uglify-js: 3.17.4
+    dev: false
+
+  /html-to-image@1.11.11:
+    resolution: {integrity: sha512-9gux8QhvjRO/erSnDPv28noDZcPZmYE7e1vFsBLKLlRlKDSqNJYebj6Qz1TGd5lsRV+X+xYyjCKjuZdABinWjA==}
     dev: false
 
   /html-to-text@9.0.5:

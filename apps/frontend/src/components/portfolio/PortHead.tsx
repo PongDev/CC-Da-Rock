@@ -16,7 +16,7 @@ export const PortHead = () => {
         <Button
           as={Link}
           href="/portfolio/membership"
-          bg={path !== "/portfolio/membership" ? "gray.300" : undefined}
+          bg={path.startsWith("/portfolio/membership") ? undefined : "gray.300"}
           color="black"
           rounded="full"
           size={{ base: "sm", md: "md" }}
@@ -28,7 +28,7 @@ export const PortHead = () => {
         <Button
           as={Link}
           href="/portfolio/history"
-          bg={path !== "/portfolio/history" ? "gray.300" : undefined}
+          bg={path.startsWith("/portfolio/history") ? undefined : "gray.300"}
           color="black"
           rounded="full"
           size={{ base: "sm", md: "md" }}
