@@ -164,6 +164,9 @@ const Nav = (props: NavProps) => {
           action();
           onClick?.();
         }}
+        variant="unstyled"
+        w="fit-content"
+        m={0}
       >
         {innerText}
       </Button>
