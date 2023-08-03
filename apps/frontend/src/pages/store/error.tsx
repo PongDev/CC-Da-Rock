@@ -55,7 +55,7 @@ export default function Error() {
           >
             <Heading size="md">{mainMsg}</Heading>
             <br />
-            {JSON.stringify(JSON.parse(err), null, 2)}
+            {err && JSON.stringify(JSON.parse(err), null, 2)}
           </Code>
         </VStack>
       </Container>

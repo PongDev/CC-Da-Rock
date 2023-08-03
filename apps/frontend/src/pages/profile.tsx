@@ -17,7 +17,7 @@ import {
 
 export default function Profile() {
   const { data, isLoading } = useAuthControllerProfile();
-  const { id, name, idNumber, ...profile } = data?.data;
+  const { id, name, idNumber, ...profile } = data?.data ?? {};
 
   return (
     <>
