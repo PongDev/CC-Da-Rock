@@ -248,7 +248,7 @@ const Page2 = (props: { cf: number }) => {
       <Button
         isLoading={isLoading}
         onClick={() => {
-          const publicKey = process.env["NEXT_PUBLIC_OMISE_PUBLIC_KEY"];
+          const publicKey = process.env.NEXT_PUBLIC_OMISE_PUBLIC_KEY;
           if (publicKey == null) {
             console.error("NEXT_PUBLIC_OMISE_PUBLIC_KEY is not set");
             return;

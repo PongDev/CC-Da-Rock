@@ -1,7 +1,6 @@
 import { setup } from "@/services/user.service";
 import "@/styles/globals.css";
 import {
-  baseTheme,
   ChakraProvider,
   extendTheme,
   withDefaultColorScheme,
@@ -9,7 +8,6 @@ import {
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import type { AppProps } from "next/app";
-// import { AuthProvider } from "react-auth-kit";
 
 const theme = extendTheme(
   {
@@ -32,7 +30,8 @@ const theme = extendTheme(
 );
 
 const queryClient = new QueryClient();
-axios.defaults.baseURL = `http://localhost:8000`;
+console.log(process.env.BACKEND_API_URL);
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 // setup user service and axios
 setup();

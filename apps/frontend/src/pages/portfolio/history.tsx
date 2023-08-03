@@ -1,9 +1,6 @@
 import { PortHead } from "@/components/portfolio/PortHead";
 import { Header } from "@/components/Header";
-import {
-  transactionControllerGetUserTransactions,
-  useTransactionControllerGetUserTransactions,
-} from "@/oapi-client/transaction";
+import { useTransactionControllerGetUserTransactions } from "@/oapi-client/transaction";
 import {
   Box,
   BoxProps,
@@ -16,17 +13,13 @@ import {
   HStack,
   List,
   ListItem,
-  Modal,
-  ModalContent,
-  ModalOverlay,
   Progress,
-  Spacer,
   Stack,
   Text,
-  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { AxiosResponse } from "axios";
+import { useMemo, useRef } from "react";
 import { useRouter } from "next/router";
 import { Link } from "@chakra-ui/next-js";
 import { Certificate } from "@/components/portfolio/Certificate";
@@ -41,7 +34,7 @@ export default function History() {
     data: res,
     isLoading,
     error,
-  } = useTransactionControllerGetUserTransactions({});
+  } = useTransactionControllerGetUserTransactions<AxiosResponse<any, any>>({});
   const transactions = res?.data?.data ?? [];
 
   const selected = useMemo(() => {
