@@ -29,6 +29,7 @@ import Image from "next/image";
 
 import { useAuthControllerProfile } from "@/oapi-client/auth";
 import { getToken, logout } from "@/services/user.service";
+import { NextRouter, useRouter } from "next/router";
 
 interface HeaderProps {}
 
@@ -107,7 +108,14 @@ const menuNavs = [
   { display: "FAQ", action: "/faq" },
   { display: "About Us", action: "/about" },
   { display: "Contact Us", action: "/contact" },
-  { display: "Logout", action: logout, authRequired: true },
+  {
+    display: "Logout",
+    action: () => {
+      logout();
+      return "/";
+    },
+    authRequired: true,
+  },
 ];
 
 const MobileNav = (props: { close: () => void }) => {
@@ -138,12 +146,13 @@ const MobileNav = (props: { close: () => void }) => {
 
 type NavProps = {
   display: string;
-  action?: string | (() => void);
+  action?: string | ((router: NextRouter) => string | void);
   onClick?: () => void;
 };
 
 const Nav = (props: NavProps) => {
   const { display, action, onClick } = props;
+  const router = useRouter();
 
   const innerText = (
     <Text fontWeight="bold" fontSize="lg">
@@ -161,8 +170,11 @@ const Nav = (props: NavProps) => {
     return (
       <Button
         onClick={() => {
-          action();
+          const redirect = action(router);
           onClick?.();
+          if (redirect) {
+            router.push(redirect);
+          }
         }}
         variant="unstyled"
         w="fit-content"
