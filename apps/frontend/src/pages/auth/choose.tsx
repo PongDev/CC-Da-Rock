@@ -1,14 +1,17 @@
 import { Header } from "@/components/Header";
-import { Link } from "@chakra-ui/next-js";
+import { Image, Link } from "@chakra-ui/next-js";
 import {
   Box,
   Button,
+  Center,
   Container,
   Flex,
   Heading,
   VStack,
   Wrap,
 } from "@chakra-ui/react";
+import { FaUserAlt } from "react-icons/fa";
+import { FaShop } from "react-icons/fa6";
 
 export default function Choose() {
   return (
@@ -28,7 +31,9 @@ export default function Choose() {
             }}
           >
             <VStack gap={6}>
-              <Box w={256} h={256} bg="gray.100" rounded="lg" shadow="lg" />
+              <Center w={256} h={256} bg="green.100" rounded="lg" shadow="lg">
+                <FaUserAlt size={128} />
+              </Center>
               <Heading fontSize="2xl">Individual</Heading>
             </VStack>
           </Link>
@@ -41,7 +46,10 @@ export default function Choose() {
             }}
           >
             <VStack gap={6}>
-              <Box w={256} h={256} bg="gray.100" rounded="lg" shadow="lg" />
+              <Center w={256} h={256} bg="green.100" rounded="lg" shadow="lg">
+                <FaShop size={128} />
+              </Center>
+
               <Heading fontSize="2xl">SMES</Heading>
             </VStack>
           </Link>
