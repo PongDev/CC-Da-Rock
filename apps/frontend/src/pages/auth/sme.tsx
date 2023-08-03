@@ -103,14 +103,21 @@ const LoginSME = forwardRef<StackProps, "div">((props, ref) => {
   const { register, handleSubmit } = useForm<LoginFormData>();
 
   async function onSubmit(data: LoginFormData) {
-    await login({
-      data: {
-        email: data.identity,
-        name: data.identity,
-        password: data.password,
-      },
-    });
-    router.push("/");
+    try {
+      await login({
+        data: {
+          email: data.identity,
+          name: data.identity,
+          password: data.password,
+        },
+      });
+      router.push("/");
+    } catch (e) {
+      console.error(e);
+      if (isAxiosError(e)) {
+        alert(e.message + ":\n" + e.response?.data.message);
+      }
+    }
   }
 
   return (
