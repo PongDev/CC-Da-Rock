@@ -19,7 +19,8 @@ RUN pnpm install --frozen-lockfile
 COPY --from=pruner /app/prune/frontend/full/ .
 RUN pnpm install --frozen-lockfile
 
-ARG BACKEND_API_URL
+ARG NEXT_PUBLIC_BACKEND_API_URL
+ARG NEXT_PUBLIC_OMISE_PUBLIC_KEY
 
 RUN pnpm run build
 RUN pnpm pkg set scripts.prepare="echo no-prepare"
