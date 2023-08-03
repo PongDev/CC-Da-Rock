@@ -1,5 +1,10 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "NEXT_PUBLIC_OMISE_PUBLIC_KEY",
+    "NEXT_PUBLIC_BACKEND_API_URL",
+    "BACKEND_API_URL"
+  ],
   "pipeline": {
     "build": {
       "dependsOn": ["^build", "^db:generate"],
@@ -22,6 +27,9 @@
       "cache": false
     },
     "db:migrate:deploy": {
+      "cache": false
+    },
+    "oapi:generate": {
       "cache": false
     }
   }

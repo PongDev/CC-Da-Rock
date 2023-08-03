@@ -6,18 +6,21 @@ import {
   Button,
   ButtonGroup,
   Container,
-  Flex,
+  GridItem,
   Heading,
   Highlight,
+  HStack,
   Img,
+  Spacer,
   Stack,
   Text,
+  useBreakpointValue,
   VStack,
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { Link } from "@chakra-ui/next-js";
-import Image from "next/image";
+import { Image, Link } from "@chakra-ui/next-js";
+import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -89,7 +92,7 @@ export default function Home() {
                   borderRadius="full"
                   width={150}
                   size="lg"
-                  href={"/auth/individual"}
+                  href={"/auth/retail"}
                   border="2px solid black"
                 >
                   <Text fontSize="xl">Individuals</Text>
@@ -112,18 +115,22 @@ export default function Home() {
         </Box>
 
         <VStack textAlign="center" p={16} m="auto" bg="#FFED9433">
-          <Heading fontWeight="bold">What We Do</Heading>
-          <Wrap spacing={10} justify="center" p={16}>
-            <WrapItem>
-              <Box w={256} h={256} bg="blue.200" />
+          <Heading fontWeight="bold">What Solar CC Can Do</Heading>
+          <Wrap spacing={64} justify="center" p={16}>
+            <WrapItem flexDirection="column" gap={4}>
+              <Img boxSize={192} objectFit="contain" src="/landing/car.png" />
+              <Heading size="md">Offset Transportation</Heading>
             </WrapItem>
-            <WrapItem>
-              <Box w={256} h={256} bg="blue.200" />
+            <WrapItem flexDirection="column" gap={4}>
+              <Img boxSize={192} objectFit="contain" src="/landing/hotel.png" />
+              <Heading size="md">Offset Your Activity</Heading>
             </WrapItem>
           </Wrap>
 
           <Text>and much more</Text>
-          <Button size="lg">Explore Our Project</Button>
+          <Button size="lg" px={32} bg="black" colorScheme="blackAlpha">
+            Explore
+          </Button>
         </VStack>
 
         <VStack textAlign="center" p={16} m="auto" bg="#9DC17766">
@@ -136,7 +143,7 @@ export default function Home() {
           >
             <VStack spacing={4}>
               <Img
-                boxSize={256}
+                boxSize={192}
                 objectFit="contain"
                 src="/landing/co2.png"
                 alt={"co2"}
@@ -145,7 +152,7 @@ export default function Home() {
             </VStack>
             <VStack spacing={4}>
               <Img
-                boxSize={256}
+                boxSize={192}
                 objectFit="contain"
                 src="/landing/student.png"
                 alt={"individual"}
@@ -154,7 +161,7 @@ export default function Home() {
             </VStack>
             <VStack spacing={4}>
               <Img
-                boxSize={256}
+                boxSize={192}
                 objectFit="contain"
                 src="/landing/paper-bag.png"
                 alt={"smes"}
@@ -164,40 +171,151 @@ export default function Home() {
           </Stack>
         </VStack>
 
-        <VStack textAlign="center" p={16} m="auto">
+        <VStack textAlign="center" py={16} m="auto" gap={8}>
           <Heading fontWeight="bold" color="green.500">
-            3 Easy Steps to Offset
+            2 Easy Steps to Offset
           </Heading>
           <Stack
             spacing={10}
             justify="center"
-            p={16}
-            direction={{ base: "column", md: "row" }}
+            // direction={{ base: "column", md: "row" }}
+            direction="column"
           >
-            <WrapItem>
-              <Box w={256} h={256} bg="blue.200" />
+            <WrapItem alignItems="center" gap={4}>
+              <Img
+                boxSize={128}
+                objectFit="contain"
+                src="/landing/cart.png"
+                alt="purchase"
+                bg="yellow.100"
+                rounded={16}
+              />
+              <Heading size={{ base: "sm", md: "md" }}>
+                1. Purchase Solar Carbon Credit
+              </Heading>
             </WrapItem>
-            <WrapItem>
-              <Box w={256} h={256} bg="blue.200" />
-            </WrapItem>
-            <WrapItem>
-              <Box w={256} h={256} bg="blue.200" />
+            <WrapItem alignItems="center" gap={4}>
+              <Img
+                boxSize={128}
+                objectFit="contain"
+                src="/landing/cert.png"
+                alt="certificate"
+                bg="yellow.100"
+                rounded={16}
+              />
+              <Heading size={{ base: "sm", md: "md" }}>
+                2. Get Certificate
+              </Heading>
             </WrapItem>
           </Stack>
 
           <Button colorScheme="green">Click Here to Purchase</Button>
         </VStack>
 
+        <Partners />
+
         <VStack textAlign="center" p={16} bg="#FFED9433">
           <Heading fontWeight="bold">
             Got questions? We’re here to help!
           </Heading>
           <Text>Our highly available team is always ready to help you.</Text>
-          <Button px={16} mt={8}>
+          <Button colorScheme="gray" px={16} mt={8}>
             Contact us
           </Button>
+        </VStack>
+
+        <VStack
+          pt={8}
+          pb={4}
+          px={8}
+          gap={4}
+          alignItems="flex-start"
+          bg="#9DC17766"
+        >
+          <HStack>
+            <Img boxSize={16} src="/favicon.png" />
+            <Heading color="green.400" fontSize={{ sm: "md", md: "xl" }}>
+              Solar CC
+            </Heading>
+          </HStack>
+
+          <Text>
+            221B baker street, Bangkok, Thailand 10555
+            <br />
+            +66 9 9999 9999
+          </Text>
+          <Spacer />
+          <Box>
+            <Text>Follow Us</Text>
+            <HStack>
+              <FaFacebook size={32} />
+              <FaInstagram size={32} />
+              <FaLinkedin size={32} />
+            </HStack>
+          </Box>
+          <Spacer />
+          <Text>© 2023 Solar CC Company Limited. All Rights Reserved</Text>
         </VStack>
       </main>
     </>
   );
 }
+
+const partners = [
+  {
+    name: "Escopolis",
+    src: "landing/Escopolis Logo.png",
+    href: "https://escopolis.co.th",
+  },
+  {
+    name: "Exim Bank",
+    src: "landing/Exim logo.webp",
+    href: "https://www.exim.go.th",
+  },
+  {
+    name: "CEO",
+    src: "landing/CEO logo.png",
+    href: "http://www.efe.or.th",
+  },
+  {
+    name: "Gideon One",
+    src: "landing/gideon one logo.jpg",
+    href: "https://www.gideon-one.com",
+  },
+  {
+    name: "TGO",
+    src: "landing/TGO logo.jpg",
+    href: "http://www.tgo.or.th/2020/index.php/th/",
+  },
+];
+const Partners = () => {
+  // Break partners into potentially multiple rows
+  const n = partners.length;
+  const b = Math.ceil(n / 2);
+  const partnerRows = useBreakpointValue({
+    base: [partners.slice(0, b), partners.slice(b)],
+    md: [partners],
+  });
+
+  return (
+    <VStack textAlign="center" py={16} gap={8} bg="#E6F0F4">
+      <Heading fontWeight="bold">Our Partners</Heading>
+      {partnerRows?.map((partners) => (
+        <HStack gap={8}>
+          {partners.map(({ src, href }) => (
+            <GridItem>
+              <Link href={href}>
+                <Img
+                  boxSize={128}
+                  objectFit="contain"
+                  src={src}
+                  bg="whiteAlpha.800"
+                />
+              </Link>
+            </GridItem>
+          ))}
+        </HStack>
+      ))}
+    </VStack>
+  );
+};

@@ -109,6 +109,7 @@ export class TransactionController {
     @User() user: JWTPayload,
     @Query() queryParams: GetTransactionsQueryParams,
   ): Promise<{ data: Transaction[]; count: number }> {
+    console.log(queryParams);
     const {
       limit = 10,
       page = 1,

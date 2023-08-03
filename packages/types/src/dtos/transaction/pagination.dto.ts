@@ -1,9 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsEmpty, IsEnum, IsInt, IsOptional, Min } from "class-validator";
 
 export class GetTransactionsQueryParams {
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: () => String,
     description: "Sort order",
     example: "createdAt+desc",
@@ -12,7 +12,7 @@ export class GetTransactionsQueryParams {
   @IsOptional()
   sortBy?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: () => String,
     description: "Time scope",
     example: "2023-07",
@@ -20,7 +20,7 @@ export class GetTransactionsQueryParams {
   @IsOptional()
   time?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: () => Number,
     description: "Page number",
     example: "1",
@@ -31,7 +31,7 @@ export class GetTransactionsQueryParams {
   @IsInt()
   page?: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: () => Number,
     description: "Data per page",
     example: "10",

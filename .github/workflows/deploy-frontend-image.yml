@@ -37,8 +37,10 @@ jobs:
         run: |
           if [ "${{ github.ref_name }}" = "main" ]; then
             echo "BACKEND_API_URL=${{ secrets.MAIN_BACKEND_API_URL }}" >> "$GITHUB_OUTPUT"
+            echo "OMISE_PUBLIC_KEY=${{ secrets.MAIN_OMISE_PUBLIC_KEY }}" >> "$GITHUB_OUTPUT"
           elif [ "${{ github.ref_name }}" = "dev" ]; then
             echo "BACKEND_API_URL=${{ secrets.DEV_BACKEND_API_URL }}" >> "$GITHUB_OUTPUT"
+            echo "OMISE_PUBLIC_KEY=${{ secrets.DEV_OMISE_PUBLIC_KEY }}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build and push
@@ -46,7 +48,8 @@ jobs:
         with:
           context: .
           build-args: |
-            BACKEND_API_URL=${{ steps.set-env.outputs.BACKEND_API_URL }}
+            NEXT_PUBLIC_BACKEND_API_URL=${{ steps.set-env.outputs.BACKEND_API_URL }}
+            NEXT_PUBLIC_OMISE_PUBLIC_KEY=${{ steps.set-env.outputs.OMISE_PUBLIC_KEY }}
           file: Dockerfile.frontend
           push: true
           tags: ${{ secrets.IMAGE_REPO }}/${{ secrets.REGISTRY_USERNAME }}/app-frontend-${{ github.ref_name }}:latest
