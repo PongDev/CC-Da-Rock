@@ -14,6 +14,7 @@ import {
   List,
   ListItem,
   Progress,
+  Spacer,
   Stack,
   Text,
   VStack,
@@ -21,7 +22,7 @@ import {
 import { AxiosResponse } from "axios";
 import { useMemo, useRef } from "react";
 import { useRouter } from "next/router";
-import { Link } from "@chakra-ui/next-js";
+import { Image, Link } from "@chakra-ui/next-js";
 import { Certificate } from "@/components/portfolio/Certificate";
 import { toPng } from "html-to-image";
 import { useAuthControllerProfile } from "@/oapi-client/auth";
@@ -61,17 +62,21 @@ export default function History() {
       <Container my={16} maxW="container.lg">
         <Stack gap={8}>
           {id === undefined &&
-            transactions.map((t: any) => (
-              <Link
-                href={`/portfolio/history?id=${t.id}`}
-                _hover={{ textDecor: "none" }}
-              >
-                <TransactionCard
-                  no={t.id}
-                  date={t.createdAt}
-                  amount={t.amount}
-                />
-              </Link>
+            (transactions.length > 0 ? (
+              transactions.map((t: any) => (
+                <Link
+                  href={`/portfolio/history?id=${t.id}`}
+                  _hover={{ textDecor: "none" }}
+                >
+                  <TransactionCard
+                    no={t.id}
+                    date={t.createdAt}
+                    amount={t.amount}
+                  />
+                </Link>
+              ))
+            ) : (
+              <TrasnactionEmpty />
             ))}
         </Stack>
 
@@ -227,6 +232,36 @@ const TransactionInfo = (props: {
   );
 };
 
+const TrasnactionEmpty = () => {
+  return (
+    <Container>
+      <VStack gap={4}>
+        <Image src="/Sad Sun.png" alt="Sad Sun" width={384} height={384} />
+        <VStack>
+          <Heading>No Order Found</Heading>
+          <Divider borderWidth={2} />
+          <Text
+            textAlign="center"
+            fontWeight="light"
+            size="lg"
+            letterSpacing={0.3}
+          >
+            Look like You haven’t make any purchase yet
+          </Text>
+        </VStack>
+
+        <Spacer />
+        <Spacer />
+        <Spacer />
+
+        <Button as={Link} href="/store/solar-cc" size="lg" width="60%">
+          Make Purchase
+        </Button>
+      </VStack>
+    </Container>
+  );
+};
+
 async function download(ref: React.RefObject<HTMLElement>, name: string) {
   if (!ref.current) {
     alert("Cannot download: ref is null");
@@ -235,6 +270,7 @@ async function download(ref: React.RefObject<HTMLElement>, name: string) {
 
   // Convert to image, and download it
   const png = await toPng(ref.current);
+
   const link = document.createElement("a");
   link.download = name;
   link.href = png;
