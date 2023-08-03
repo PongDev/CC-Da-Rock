@@ -253,6 +253,13 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
         {...register("phone")}
       />
 
+      <FormInput
+        label="Company’s Name"
+        type="text"
+        required
+        // {...register("company")}
+      />
+
       <FormControl>
         <FormLabel fontWeight="bold">Industry Type</FormLabel>
         <Select
