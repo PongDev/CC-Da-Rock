@@ -266,9 +266,12 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
           required
           {...register("size")}
         >
-          {Object.entries(RegisterUserSMEsRequestSize).map(([k, v]) => (
-            <option value={k}>{capitalCase(v)}</option>
-          ))}
+          <option value="SMALL">
+            Small (xXXX baht in total Monthly Revenue)
+          </option>
+          <option value="MEDIUM">
+            Medium (xXXX baht in total Monthly Revenue)
+          </option>
         </Select>
       </FormControl>
 
@@ -301,5 +304,5 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
 });
 
 function capitalCase(str: string) {
-  return str[0].toUpperCase() + str.slice(1);
+  return str[0].toUpperCase() + str.slice(1).toLowerCase();
 }
