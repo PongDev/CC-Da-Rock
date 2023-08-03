@@ -12,6 +12,7 @@ import { useLogin } from "@/services/user.service";
 import {
   Box,
   Button,
+  Center,
   Container,
   FormControl,
   FormLabel,
@@ -149,16 +150,21 @@ const LoginSME = forwardRef<StackProps, "div">((props, ref) => {
 
       <Spacer />
 
-      <Button
-        colorScheme="green"
-        color="black"
-        size="lg"
-        mt={4}
-        type="submit"
-        isLoading={isLoading}
-      >
-        Login
-      </Button>
+      <Stack justifyContent="center" textAlign="center">
+        <Button
+          colorScheme="green"
+          color="black"
+          size="lg"
+          mt={4}
+          type="submit"
+          isLoading={isLoading}
+        >
+          Login
+        </Button>
+        <Button variant="link" colorScheme="red" size="xs">
+          Forgot Password?
+        </Button>
+      </Stack>
     </Stack>
   );
 });
