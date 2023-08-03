@@ -21,10 +21,13 @@ import {
 } from "@chakra-ui/react";
 import { Image, Link } from "@chakra-ui/next-js";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { getToken } from "@/services/user.service";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const token = getToken();
+
   return (
     <>
       <Head>
@@ -128,7 +131,14 @@ export default function Home() {
           </Wrap>
 
           <Text>and much more</Text>
-          <Button size="lg" px={32} bg="black" colorScheme="blackAlpha">
+          <Button
+            as={Link}
+            href="/project"
+            size="lg"
+            px={32}
+            bg="black"
+            colorScheme="blackAlpha"
+          >
             Explore
           </Button>
         </VStack>
@@ -171,6 +181,23 @@ export default function Home() {
           </Stack>
         </VStack>
 
+        <VStack textAlign="center" py={16} m="auto" gap={8} bg="#FFED9433">
+          <Heading fontWeight="bold">
+            Calculate Your Carbon Footprint{" "}
+            <Button colorScheme="green" variant="link" fontSize="3xl">
+              Here!
+            </Button>
+          </Heading>
+          <Link href="http://www.tgo.or.th/2020/index.php/th/post/thai-carbon-footprint-calculator-627">
+            <Img
+              boxSize={256}
+              objectFit="contain"
+              src="/landing/calculator.png"
+              alt="carbon footprint"
+            />
+          </Link>
+        </VStack>
+
         <VStack textAlign="center" py={16} m="auto" gap={8}>
           <Heading fontWeight="bold" color="green.500">
             2 Easy Steps to Offset
@@ -209,7 +236,13 @@ export default function Home() {
             </WrapItem>
           </Stack>
 
-          <Button colorScheme="green">Click Here to Purchase</Button>
+          <Button
+            as={Link}
+            href={token ? "/store/solar-cc" : "/auth/choose"}
+            colorScheme="green"
+          >
+            Click Here to Purchase
+          </Button>
         </VStack>
 
         <Partners />

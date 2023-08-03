@@ -222,7 +222,7 @@ const RegisterSME = forwardRef<StackProps, "div">((props, ref) => {
         {...register("lastName")}
       />
       <FormInput
-        label="Identification Number"
+        label="Identification Number or Passport Number"
         type="text"
         required
         {...register("idNumber")}

@@ -223,7 +223,7 @@ const RegisterRetail = forwardRef<StackProps, "div">((props, ref) => {
         {...register("phoneNumber")}
       />
       <FormInput
-        label="Identification Number"
+        label="Identification Number or Passport Number"
         type="text"
         required
         {...register("idNumber")}

@@ -35,8 +35,12 @@ interface HeaderProps {}
 
 const navs = [
   { display: "Home", href: "/" },
-  { display: "Buy Offset" },
-  { display: "Investment" },
+  {
+    display: "Buy Offset",
+    href: () => {
+      return getToken() ? "/store/solar-cc" : "/auth/choose";
+    },
+  },
   { display: "About Us", href: "/about" },
 ];
 
@@ -65,9 +69,7 @@ export const Header = forwardRef<BoxProps, "div">((props, ref) => {
 
         <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
           {navs.map((nav, i) => (
-            <Link href={nav.href || "#"} key={i}>
-              <Text fontWeight="bold">{nav.display}</Text>
-            </Link>
+            <Nav key={i} display={nav.display} action={nav.href} />
           ))}
         </HStack>
 
@@ -101,8 +103,17 @@ const menuNavs = [
   { display: "Home", action: "/" },
   { display: "Profile", action: "/profile", authRequired: true },
   { display: "Portfolio", action: "/portfolio", authRequired: true },
-  { display: "Calculate Your Carbon Footprint" },
-  { display: "Buy Offset", action: "/store/solar-cc" },
+  {
+    display: "Calculate Your Carbon Footprint",
+    action:
+      "http://www.tgo.or.th/2020/index.php/th/post/thai-carbon-footprint-calculator-627",
+  },
+  {
+    display: "Buy Offset",
+    action: () => {
+      return getToken() ? "/store/solar-cc" : "/auth/choose";
+    },
+  },
   { display: "Project", action: "/project" },
   { display: "Privilege", action: "/privilege" },
   { display: "FAQ", action: "/faq" },
