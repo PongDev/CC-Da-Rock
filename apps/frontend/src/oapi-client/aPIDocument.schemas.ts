@@ -19,19 +19,19 @@ export type TransactionControllerGetUserTransactionsParams = {
   /**
    * Sort order
    */
-  sortBy: TransactionControllerGetUserTransactionsSortBy;
+  sortBy?: TransactionControllerGetUserTransactionsSortBy;
   /**
    * Time scope
    */
-  time: string;
+  time?: string;
   /**
    * Page number
    */
-  page: number;
+  page?: number;
   /**
    * Data per page
    */
-  limit: number;
+  limit?: number;
 };
 
 export type TransactionControllerGetTransactionsSortBy =
@@ -48,19 +48,19 @@ export type TransactionControllerGetTransactionsParams = {
   /**
    * Sort order
    */
-  sortBy: TransactionControllerGetTransactionsSortBy;
+  sortBy?: TransactionControllerGetTransactionsSortBy;
   /**
    * Time scope
    */
-  time: string;
+  time?: string;
   /**
    * Page number
    */
-  page: number;
+  page?: number;
   /**
    * Data per page
    */
-  limit: number;
+  limit?: number;
 };
 
 export interface PurchaseSolarCoinsRequestDTO {

@@ -90,7 +90,7 @@ export const useTransactionControllerPurchaseSolarCoins = <
   return useMutation(mutationOptions);
 };
 export const transactionControllerGetTransactions = (
-  params: TransactionControllerGetTransactionsParams,
+  params?: TransactionControllerGetTransactionsParams,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<void>> => {
   return axios.get(`/transaction/all`, {
@@ -100,14 +100,14 @@ export const transactionControllerGetTransactions = (
 };
 
 export const getTransactionControllerGetTransactionsQueryKey = (
-  params: TransactionControllerGetTransactionsParams,
+  params?: TransactionControllerGetTransactionsParams,
 ) => [`/transaction/all`, ...(params ? [params] : [])] as const;
 
 export const getTransactionControllerGetTransactionsQueryOptions = <
   TData = Awaited<ReturnType<typeof transactionControllerGetTransactions>>,
   TError = AxiosError<unknown>,
 >(
-  params: TransactionControllerGetTransactionsParams,
+  params?: TransactionControllerGetTransactionsParams,
   options?: {
     query?: UseQueryOptions<
       Awaited<ReturnType<typeof transactionControllerGetTransactions>>,
@@ -145,7 +145,7 @@ export const useTransactionControllerGetTransactions = <
   TData = Awaited<ReturnType<typeof transactionControllerGetTransactions>>,
   TError = AxiosError<unknown>,
 >(
-  params: TransactionControllerGetTransactionsParams,
+  params?: TransactionControllerGetTransactionsParams,
   options?: {
     query?: UseQueryOptions<
       Awaited<ReturnType<typeof transactionControllerGetTransactions>>,
@@ -170,7 +170,7 @@ export const useTransactionControllerGetTransactions = <
 };
 
 export const transactionControllerGetUserTransactions = (
-  params: TransactionControllerGetUserTransactionsParams,
+  params?: TransactionControllerGetUserTransactionsParams,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<void>> => {
   return axios.get(`/transaction`, {
@@ -180,14 +180,14 @@ export const transactionControllerGetUserTransactions = (
 };
 
 export const getTransactionControllerGetUserTransactionsQueryKey = (
-  params: TransactionControllerGetUserTransactionsParams,
+  params?: TransactionControllerGetUserTransactionsParams,
 ) => [`/transaction`, ...(params ? [params] : [])] as const;
 
 export const getTransactionControllerGetUserTransactionsQueryOptions = <
   TData = Awaited<ReturnType<typeof transactionControllerGetUserTransactions>>,
   TError = AxiosError<unknown>,
 >(
-  params: TransactionControllerGetUserTransactionsParams,
+  params?: TransactionControllerGetUserTransactionsParams,
   options?: {
     query?: UseQueryOptions<
       Awaited<ReturnType<typeof transactionControllerGetUserTransactions>>,
@@ -228,7 +228,7 @@ export const useTransactionControllerGetUserTransactions = <
   TData = Awaited<ReturnType<typeof transactionControllerGetUserTransactions>>,
   TError = AxiosError<unknown>,
 >(
-  params: TransactionControllerGetUserTransactionsParams,
+  params?: TransactionControllerGetUserTransactionsParams,
   options?: {
     query?: UseQueryOptions<
       Awaited<ReturnType<typeof transactionControllerGetUserTransactions>>,

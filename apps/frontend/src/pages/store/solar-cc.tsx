@@ -207,7 +207,6 @@ const Page2 = (props: { cf: number }) => {
     }
 
     const data: PurchaseSolarCoinsRequestDTO = {
-      userId: decodedToken.userId,
       amount: satang / 100,
       cf: props.cf,
       scc: order.scc,
