@@ -79,12 +79,8 @@ export const loadBackendConfig = (): BackendConfig => {
     url: process.env.BACKEND_HOST || "http://localhost",
     port: parseInt(process.env.BACKEND_PORT ?? "", 10) || 3000,
     frontend: {
-      url:
-        process.env.FRONTEND_HOST ||
-        (node_env === "development"
-          ? "http://localhost:3000"
-          : // TODO: Not hardcode this vvvvvvv
-            "https://ccdarock-dev.pongdev.dev"),
+      // TODO: Not hardcode this vvvvvvv
+      url: "https://ccdarock-dev.pongdev.dev",
     },
     bcrypt: {
       hashRound:
