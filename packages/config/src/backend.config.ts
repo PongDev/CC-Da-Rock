@@ -4,6 +4,9 @@ export type BackendConfig = {
   node_env: string;
   url: string;
   port: number;
+  frontend: {
+    url: string;
+  };
   bcrypt: {
     hashRound: number;
   };
@@ -69,10 +72,20 @@ export const loadBackendConfig = (): BackendConfig => {
     graphqlPath = "graphql";
   }
 
+  const node_env = process.env.NODE_ENV ?? "development";
+
   return {
-    node_env: process.env.NODE_ENV ?? "development",
+    node_env,
     url: process.env.BACKEND_HOST || "http://localhost",
     port: parseInt(process.env.BACKEND_PORT ?? "", 10) || 3000,
+    frontend: {
+      url:
+        process.env.FRONTEND_HOST ||
+        (node_env === "development"
+          ? "http://localhost:3000"
+          : // TODO: Not hardcode this vvvvvvv
+            "https://ccdarock-dev.pongdev.dev"),
+    },
     bcrypt: {
       hashRound:
         parseInt(process.env.BACKEND_BCRYPT_HASH_ROUNDS ?? "", 10) || 12,

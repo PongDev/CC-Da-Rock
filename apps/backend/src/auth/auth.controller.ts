@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Redirect,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
@@ -34,6 +35,7 @@ import { AllExceptionsFilter } from 'src/common/exception.filter';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import * as database from 'database';
 import { EmailNotSentError } from 'src/common/error';
+import { backendConfig as config } from 'config';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -165,13 +167,22 @@ export class AuthController {
   })
   @Get('email/verify/:token')
   @HttpCode(HttpStatus.OK)
-  async verify(@Param('token') token: string): Promise<VerifyEmailResponseDto> {
+  @Redirect(`${config.frontend.url}/auth/success`)
+  async verify(
+    @Param('token') token: string,
+  ): Promise<VerifyEmailResponseDto | { url: string }> {
     const verifiedUserId = await this.authService.verifyEmail(token);
-    return {
-      success: true,
-      message: 'Successfully verify email.',
-      email: verifiedUserId.email,
-    };
+    if (verifiedUserId) {
+      return {
+        url: `${config.frontend.url}/auth/success`,
+      };
+    } else {
+      return {
+        success: true,
+        message: 'Successfully verify email.',
+        email: verifiedUserId.email,
+      };
+    }
   }
 
   @ApiExtraModels(ResendEmailResponseDto)
