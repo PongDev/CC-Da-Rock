@@ -9,6 +9,7 @@ import {
   useAuthControllerRegisterSMEs,
 } from "@/oapi-client/auth";
 import { useLogin } from "@/services/user.service";
+import { Link } from "@chakra-ui/next-js";
 import {
   Box,
   Button,
@@ -161,7 +162,13 @@ const LoginSME = forwardRef<StackProps, "div">((props, ref) => {
         >
           Login
         </Button>
-        <Button variant="link" colorScheme="red" size="xs">
+        <Button
+          as={Link}
+          href="/auth/forget-password"
+          variant="link"
+          colorScheme="red"
+          size="xs"
+        >
           Forgot Password?
         </Button>
       </Stack>

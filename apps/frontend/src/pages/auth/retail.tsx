@@ -1,6 +1,7 @@
 import { FormInput } from "@/components/FormInput";
 import { Header } from "@/components/Header";
 import { useLogin } from "@/services/user.service";
+import { Link } from "@chakra-ui/next-js";
 import {
   Box,
   Button,
@@ -143,7 +144,13 @@ const LoginRetail = forwardRef<StackProps, "div">((props, ref) => {
         >
           Login
         </Button>
-        <Button variant="link" colorScheme="red" size="xs">
+        <Button
+          as={Link}
+          href="/auth/forget-password"
+          variant="link"
+          colorScheme="red"
+          size="xs"
+        >
           Forgot Password?
         </Button>
       </Stack>
