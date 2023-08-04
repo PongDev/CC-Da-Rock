@@ -22,7 +22,7 @@ export default function Membership() {
             width={192}
             height={192}
           />
-          <Text> {co2} tCO2e</Text>
+          <Text> {co2} kCO2e</Text>
           <Heading>You Have Offset</Heading>
         </VStack>
 
