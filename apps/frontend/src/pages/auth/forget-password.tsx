@@ -23,26 +23,33 @@ export default function ForgetPassword() {
     count: 1,
   });
 
+  const [email, setEmail] = useState("");
+
   return (
     <>
       <Header />
 
       {activeStep === 0 ? (
-        <Page1 next={() => goToNext()} />
+        <Page1
+          next={(email) => {
+            setEmail(email);
+            goToNext();
+          }}
+        />
       ) : activeStep === 1 ? (
-        <Page2 next={() => {}} />
+        <Page2 next={() => {}} email={email} />
       ) : null}
     </>
   );
 }
 
 type FormData1 = { email: string };
-const Page1 = (props: { next: () => void }) => {
+const Page1 = (props: { next: (email: string) => void }) => {
   const { register, handleSubmit } = useForm<FormData1>();
 
   function onSubmit(data: FormData1) {
     const { email } = data;
-    props.next();
+    props.next(email);
   }
 
   return (
@@ -87,7 +94,7 @@ const Page1 = (props: { next: () => void }) => {
 type FormData2 = {
   verificationCode: string;
 };
-const Page2 = (props: { next?: () => void }) => {
+const Page2 = (props: { next?: () => void; email: string }) => {
   const { register, handleSubmit } = useForm<FormData2>();
 
   const [timer, setTimer] = useState(0);
@@ -122,7 +129,7 @@ const Page2 = (props: { next?: () => void }) => {
       >
         <Heading size="xl">Verification Code</Heading>
         <Text color="gray" fontSize="sm">
-          The Code is Sent to xxxx@xxxx.com. Please Check Your Email
+          The Code is Sent to {props.email}. Please Check Your Email
         </Text>
       </Stack>
 
