@@ -361,14 +361,19 @@ const Partners = () => {
         <HStack gap={8}>
           {partners.map(({ src, href }) => (
             <GridItem>
-              <Link href={href}>
+              <Box as={Link} href={href}>
                 <Img
                   boxSize={128}
                   objectFit="contain"
                   src={src}
                   bg="whiteAlpha.800"
+                  transition="all 0.2s"
+                  _hover={{
+                    transform: "scale(1.1)",
+                    borderRadius: "16px",
+                  }}
                 />
-              </Link>
+              </Box>
             </GridItem>
           ))}
         </HStack>
