@@ -11,45 +11,67 @@ import {
   useDisclosure,
   useSteps,
   useTab,
+  useToast,
 } from "@chakra-ui/react";
 import { Header } from "@/components/Header";
 import { FormInput } from "@/components/FormInput";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { useAuthControllerForgotPassword } from "@/oapi-client/auth";
+import { isAxiosError } from "axios";
 
 export default function ForgetPassword() {
-  const { activeStep, goToNext } = useSteps({
-    index: 0,
-    count: 1,
-  });
+  // const { activeStep, goToNext } = useSteps({
+  //   index: 0,
+  //   count: 1,
+  // });
 
   const [email, setEmail] = useState("");
 
   return (
     <>
       <Header />
-
-      {activeStep === 0 ? (
-        <Page1
-          next={(email) => {
-            setEmail(email);
-            goToNext();
-          }}
-        />
-      ) : activeStep === 1 ? (
-        <Page2 next={() => {}} email={email} />
-      ) : null}
+      <Page1 />
     </>
   );
 }
 
-type FormData1 = { email: string };
-const Page1 = (props: { next: (email: string) => void }) => {
-  const { register, handleSubmit } = useForm<FormData1>();
+type FormData = { email: string };
+const Page1 = () => {
+  const { register, handleSubmit, reset } = useForm<FormData>();
+  const toast = useToast();
 
-  function onSubmit(data: FormData1) {
+  const { mutateAsync: forgotPassword, isLoading } =
+    useAuthControllerForgotPassword();
+
+  async function onSubmit(data: FormData) {
     const { email } = data;
-    props.next(email);
+
+    try {
+      const res = await forgotPassword({
+        data: {
+          email,
+        },
+      });
+      toast({
+        title: "Password reset email Sent",
+        description: "Please check your email",
+      });
+      reset();
+    } catch (e) {
+      console.error(e);
+      if (isAxiosError(e)) {
+        // if (e.status === 404) {
+        //   toast({
+        //     title: "Email not found",
+        //     status: "error",
+        //   });
+        //   return;
+        // }
+
+        alert(e.message + ":\n" + e.response?.data.message);
+      }
+    }
   }
 
   return (
@@ -82,90 +104,11 @@ const Page1 = (props: { next: (email: string) => void }) => {
           color="black"
           size="lg"
           type="submit"
-          // isLoading={loading}
+          isLoading={isLoading}
         >
           Confirm Email
         </Button>
       </Stack>
-    </Container>
-  );
-};
-
-type FormData2 = {
-  verificationCode: string;
-};
-const Page2 = (props: { next?: () => void; email: string }) => {
-  const { register, handleSubmit } = useForm<FormData2>();
-
-  const [timer, setTimer] = useState(0);
-  useEffect(() => {
-    const i = setInterval(() => {
-      setTimer((t) => Math.max(0, t - 1));
-    }, 1000);
-    return () => clearInterval(i);
-  });
-
-  function onSubmit(data: FormData2) {
-    const { verificationCode } = data;
-
-    alert("Sending " + verificationCode);
-    props.next?.();
-  }
-
-  function resend() {
-    const ok = timer <= 0;
-    if (!ok) return;
-
-    setTimer(30);
-  }
-
-  return (
-    <Container maxW="4xl" textAlign="center" py={8}>
-      <Stack
-        textAlign={{
-          base: "left",
-          md: "center",
-        }}
-      >
-        <Heading size="xl">Verification Code</Heading>
-        <Text color="gray" fontSize="sm">
-          The Code is Sent to {props.email}. Please Check Your Email
-        </Text>
-      </Stack>
-
-      <Spacer my={16} />
-
-      <Stack m="auto" as="form" spacing={4} onSubmit={handleSubmit(onSubmit)}>
-        <HStack m="auto">
-          <PinInput {...register("verificationCode")}>
-            <PinInputField />
-            <PinInputField />
-            <PinInputField />
-            <PinInputField />
-          </PinInput>
-        </HStack>
-
-        <HStack m="auto">
-          <Text color="gray" fontSize="sm">
-            Didn’t Receive Code?
-          </Text>
-          <Button variant="ghost" size="sm" onClick={resend}>
-            Sent Again {timer > 0 ? `in ${timer} Second` : ""}
-          </Button>
-        </HStack>
-      </Stack>
-
-      <Spacer my={8} />
-
-      <Button
-        colorScheme="green"
-        color="black"
-        size="lg"
-        type="submit"
-        // isLoading={loading}
-      >
-        Confirm Code
-      </Button>
     </Container>
   );
 };
