@@ -268,7 +268,15 @@ export default function Home() {
             Got questions? We’re here to help!
           </Heading>
           <Text>Our highly available team is always ready to help you.</Text>
-          <Button colorScheme="gray" px={16} mt={8}>
+          <Button
+            as={Link}
+            href="/contact"
+            mt={8}
+            size="lg"
+            px={32}
+            bg="black"
+            colorScheme="blackAlpha"
+          >
             Contact us
           </Button>
         </VStack>
