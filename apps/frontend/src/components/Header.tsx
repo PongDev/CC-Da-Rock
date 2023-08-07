@@ -4,26 +4,21 @@ import {
   Box,
   BoxProps,
   Button,
-  Center,
   Collapse,
   Divider,
   Flex,
   forwardRef,
   Heading,
   HStack,
-  Icon,
   IconButton,
-  MenuButton,
   Skeleton,
   Spacer,
   Stack,
   Text,
-  useColorMode,
   useDisclosure,
-  VStack,
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
-import { FaUserAlt } from "react-icons/fa";
+import { FaCartPlus, FaUserAlt } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Image from "next/image";
 
@@ -33,15 +28,15 @@ import { NextRouter, useRouter } from "next/router";
 
 interface HeaderProps {}
 
-const navs = [
-  { display: "Home", href: "/" },
+const navs: NavProps[] = [
+  { display: "Home", action: "/" },
   {
     display: "Buy Offset",
-    href: () => {
+    action: () => {
       return getToken() ? "/store/solar-cc" : "/auth/choose";
     },
   },
-  { display: "About Us", href: "/about" },
+  { display: "About Us", action: "/about" },
 ];
 
 export const Header = forwardRef<BoxProps, "div">((props, ref) => {
@@ -69,7 +64,7 @@ export const Header = forwardRef<BoxProps, "div">((props, ref) => {
 
         <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
           {navs.map((nav, i) => (
-            <Nav key={i} display={nav.display} action={nav.href} />
+            <Nav key={i} {...nav} />
           ))}
         </HStack>
 
@@ -81,6 +76,15 @@ export const Header = forwardRef<BoxProps, "div">((props, ref) => {
             </Button>
           </Link>
         </Skeleton>
+
+        <IconButton
+          as={Link}
+          href="/store"
+          icon={<FaCartPlus size={24} />}
+          aria-label="cart"
+          variant="ghost"
+          colorScheme="blackAlpha"
+        />
 
         <IconButton
           color="black"
@@ -156,8 +160,9 @@ const MobileNav = (props: { close: () => void }) => {
 };
 
 type NavProps = {
-  display: string;
+  display: string | JSX.Element;
   action?: string | ((router: NextRouter) => string | void);
+  authRequired?: boolean;
   onClick?: () => void;
 };
 
@@ -165,11 +170,14 @@ const Nav = (props: NavProps) => {
   const { display, action, onClick } = props;
   const router = useRouter();
 
-  const innerText = (
-    <Text fontWeight="bold" fontSize="lg">
-      {display}
-    </Text>
-  );
+  const innerText =
+    typeof display === "string" ? (
+      <Text fontWeight="bold" fontSize="lg">
+        {display}
+      </Text>
+    ) : (
+      display
+    );
 
   if (typeof action === "string") {
     return (
