@@ -26,12 +26,7 @@ import {
 import { User } from './user.decorator';
 import { AuthService } from './auth.service';
 import { JwtRefreshAuthGuard } from './jwt-refresh-auth.guard';
-import {
-  ApiBearerAuth,
-  ApiExtraModels,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllExceptionsFilter } from 'src/common/exception.filter';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { EmailNotSentError } from 'src/common/error';
@@ -46,6 +41,7 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'The user has been successfully created.',
+    type: RegisterUserResponse,
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
@@ -74,6 +70,7 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'The user has been successfully created.',
+    type: RegisterUserResponse,
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
@@ -152,10 +149,10 @@ export class AuthController {
     return await this.authService.profile(user.userId);
   }
 
-  @ApiExtraModels(VerifyEmailResponseDto)
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Successfully verify email.',
+    type: VerifyEmailResponseDto,
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -185,10 +182,10 @@ export class AuthController {
     }
   }
 
-  @ApiExtraModels(ResendEmailResponseDto)
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Successfully resend email.',
+    type: ResendEmailResponseDto,
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -217,6 +214,7 @@ export class AuthController {
     status: HttpStatus.OK,
     description:
       'Verification Email has been sent if the email exists in our system.',
+    type: null,
   })
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
@@ -227,6 +225,7 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Reset User's Password.",
+    type: null,
   })
   @Post('reset-password')
   @HttpCode(HttpStatus.CREATED)

@@ -6,7 +6,6 @@ import {
   HttpStatus,
   Post,
   Query,
-  Req,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
