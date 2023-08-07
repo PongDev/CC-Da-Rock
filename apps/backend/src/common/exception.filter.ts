@@ -17,6 +17,7 @@ import {
   RecordNotFound,
   TransactionError,
   DatabaseError,
+  EmailNotSentError,
 } from './error';
 
 @Catch()
@@ -41,6 +42,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? HttpStatus.BAD_REQUEST
         : exception instanceof EmailHasBeenSent
         ? HttpStatus.BAD_REQUEST
+        : exception instanceof EmailNotSentError
+        ? HttpStatus.INTERNAL_SERVER_ERROR
         : exception instanceof BusinessLogicError
         ? HttpStatus.INTERNAL_SERVER_ERROR
         : exception instanceof TransactionError

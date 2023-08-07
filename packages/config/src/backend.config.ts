@@ -49,6 +49,7 @@ export type BackendConfig = {
     publicKey: string;
     secretKey: string;
   };
+  resetPasswordTokenExpireMinutes: number;
 };
 
 export const loadBackendConfig = (): BackendConfig => {
@@ -73,14 +74,18 @@ export const loadBackendConfig = (): BackendConfig => {
   }
 
   const node_env = process.env.NODE_ENV ?? "development";
+  let frontendURL = process.env.FRONTEND_URL || "http://localhost:3000";
+
+  while (frontendURL.endsWith("/")) {
+    frontendURL = frontendURL.slice(0, -1);
+  }
 
   return {
     node_env,
     url: process.env.BACKEND_HOST || "http://localhost",
     port: parseInt(process.env.BACKEND_PORT ?? "", 10) || 3000,
     frontend: {
-      // TODO: Not hardcode this vvvvvvv
-      url: "https://ccdarock-dev.pongdev.dev",
+      url: frontendURL,
     },
     bcrypt: {
       hashRound:
@@ -130,5 +135,7 @@ export const loadBackendConfig = (): BackendConfig => {
       publicKey: process.env.OMISE_PUBLIC_KEY || "missing",
       secretKey: process.env.OMISE_SECRET_KEY || "missing",
     },
+    resetPasswordTokenExpireMinutes:
+      parseInt(process.env.RESET_PASSWORD_TOKEN_EXPIRE_MINUTES ?? "", 10) || 15,
   };
 };

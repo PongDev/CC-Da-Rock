@@ -16,13 +16,14 @@ import { UserRepository } from '../repositories/userRepo';
 import {
   DatabaseError,
   EmailHasBeenSent,
+  EmailNotSentError,
   InvalidRequestError,
   PermissionError,
-  RecordNotFound,
 } from 'src/common/error';
 import { User, VerificationEmail } from 'database';
 import { VerificationEmailRepository } from 'src/repositories/verificationEmailRepo';
 import { SMEsRepository } from 'src/repositories/smesRepo';
+import * as sanitizeHtml from 'sanitize-html';
 
 @Injectable()
 export class AuthService {
@@ -216,9 +217,9 @@ export class AuthService {
         from: '"SolarCC Company" <' + backendConfig.email.auth.user + '>',
         to: email, // list of receivers (separated by ,)
         subject: 'Verify Email for SolarCC',
-        html: `Hi! <br><br> Thank you for register in our service. Your name has been registered as ${
-          (await this.profile(userId)).name
-        }.<br><br>Click here to activate your account<br>${verificationLink}`,
+        html: `Hi! <br><br> Thank you for register in our service. Your name has been registered as ${sanitizeHtml(
+          (await this.profile(userId)).name,
+        )}.<br><br>Click here to activate your account<br>${verificationLink}`,
       };
       try {
         const emailSent = await transporter.sendMail(mailOptions);
@@ -282,5 +283,84 @@ export class AuthService {
 
   async findUserWithVerifiedEmail(email: string): Promise<User> {
     return await this.userRepo.findFirst({ email: email, emailVerified: true });
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    const user = await this.userRepo.findUniqueUser({ email: email });
+
+    if (user) {
+      const userResetPasswordToken =
+        await this.userRepo.getUserResetPasswordTokenFromEmail(email);
+      if (
+        userResetPasswordToken &&
+        userResetPasswordToken.expiredAt > new Date()
+      ) {
+        throw new EmailHasBeenSent(
+          `Reset Password email has been sent recently. Please wait for ${backendConfig.resetPasswordTokenExpireMinutes} minutes before trying again`,
+        );
+      }
+
+      const resetPasswordToken = crypto.randomBytes(64).toString('hex');
+
+      await this.userRepo.createOrUpdateUserResetPasswordToken(user.id, {
+        token: resetPasswordToken,
+        expiredAt: new Date(
+          Date.now() +
+            1000 * 60 * backendConfig.resetPasswordTokenExpireMinutes,
+        ),
+      });
+
+      const verificationLink = `${
+        backendConfig.frontend.url
+      }/auth/reset-password/?email=${encodeURIComponent(
+        email,
+      )}&token=${encodeURIComponent(resetPasswordToken)}`;
+      const transporter = nodemailer.createTransport({
+        ...backendConfig.email,
+      });
+      const mailOptions = {
+        from: '"SolarCC Company" <' + backendConfig.email.auth.user + '>',
+        to: email, // list of receivers (separated by ,)
+        subject: 'Reset Password for SolarCC',
+        html: `Hi! <br><br> This is your link for your password reset. You should ignore this email if you doesn't request a password reset.<br><br>Click here to reset your password<br>${verificationLink}`,
+      };
+      try {
+        const emailSent = await transporter.sendMail(mailOptions);
+
+        if (!emailSent) {
+          throw new EmailNotSentError('Reset Password Email not sent.');
+        }
+      } catch (e) {
+        console.log(e);
+        throw e;
+      }
+    }
+  }
+
+  async resetPassword(
+    email: string,
+    token: string,
+    newPassword: string,
+  ): Promise<boolean> {
+    const userResetPasswordToken =
+      await this.userRepo.getUserResetPasswordTokenFromEmail(email);
+
+    if (
+      userResetPasswordToken === null ||
+      userResetPasswordToken.expiredAt < new Date() ||
+      token !== userResetPasswordToken.token
+    ) {
+      throw new InvalidRequestError(
+        'Email Not Found, Invalid Token or Token expired.',
+      );
+    }
+    await this.userRepo.deleteUserResetPasswordToken(
+      userResetPasswordToken.userId,
+    );
+    await this.userRepo.changeUserPassword(
+      email,
+      await bcrypt.hash(newPassword, this.hashRound),
+    );
+    return true;
   }
 }

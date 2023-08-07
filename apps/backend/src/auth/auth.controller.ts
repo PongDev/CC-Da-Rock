@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ForgotPasswordRequestDTO,
   JWTPayload,
   JWTToken,
   LoginRequest,
@@ -19,6 +20,7 @@ import {
   RegisterUserSMEsRequest,
   ResendEmailRequestDto,
   ResendEmailResponseDto,
+  ResetPasswordRequestDTO,
   VerifyEmailResponseDto,
 } from 'types';
 import { User } from './user.decorator';
@@ -28,12 +30,10 @@ import {
   ApiBearerAuth,
   ApiExtraModels,
   ApiResponse,
-  ApiResponseProperty,
   ApiTags,
 } from '@nestjs/swagger';
 import { AllExceptionsFilter } from 'src/common/exception.filter';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import * as database from 'database';
 import { EmailNotSentError } from 'src/common/error';
 import { backendConfig as config } from 'config';
 
@@ -211,5 +211,30 @@ export class AuthController {
     } else {
       throw new EmailNotSentError('Email not sent.');
     }
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description:
+      'Verification Email has been sent if the email exists in our system.',
+  })
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(@Body() data: ForgotPasswordRequestDTO): Promise<void> {
+    await this.authService.forgotPassword(data.email);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Reset User's Password.",
+  })
+  @Post('reset-password')
+  @HttpCode(HttpStatus.CREATED)
+  async resetPassword(@Body() data: ResetPasswordRequestDTO): Promise<void> {
+    await this.authService.resetPassword(
+      data.email,
+      data.token,
+      data.newPassword,
+    );
   }
 }

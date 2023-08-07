@@ -24,6 +24,7 @@ model User {
   Transaction       Transaction[]
   VerificationEmail VerificationEmail[]
   SolarSerial       SolarSerial[]
+  resetPassword     ResetPassword?
 }
 
 enum RoleType {
@@ -55,6 +56,13 @@ model VerificationEmail {
   userId Int    @unique
   email  String
   token  String
+}
+
+model ResetPassword {
+  userId    Int      @unique
+  token     String
+  expiredAt DateTime
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 enum TransactionType {

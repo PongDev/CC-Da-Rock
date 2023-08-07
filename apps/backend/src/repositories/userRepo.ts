@@ -1,6 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma, RoleType, SMEsSize, SMEsType, User } from 'database';
+import {
+  Prisma,
+  ResetPassword,
+  RoleType,
+  SMEsSize,
+  SMEsType,
+  User,
+} from 'database';
 // import { InvalidRequestError } from 'src/common/error';
 import {
   DatabaseError,
@@ -148,6 +155,76 @@ export class UserRepository {
     return await this.prismaService.user.delete({
       where: {
         id: id,
+      },
+    });
+  }
+
+  async createOrUpdateUserResetPasswordToken(
+    userId: number,
+    token: {
+      token: string;
+      expiredAt: Date;
+    },
+  ): Promise<void> {
+    await this.prismaService.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        resetPassword: {
+          upsert: {
+            create: token,
+            update: token,
+          },
+        },
+      },
+    });
+  }
+
+  async getUserResetPasswordToken(userId: number): Promise<ResetPassword> {
+    return await this.prismaService.resetPassword.findUnique({
+      where: {
+        userId: userId,
+      },
+    });
+  }
+
+  async getUserResetPasswordTokenFromEmail(
+    email: string,
+  ): Promise<ResetPassword> {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email: email,
+      },
+      select: {
+        resetPassword: true,
+      },
+    });
+
+    if (!user) {
+      return null;
+    }
+    return user.resetPassword;
+  }
+
+  async deleteUserResetPasswordToken(userId: number): Promise<void> {
+    await this.prismaService.resetPassword.delete({
+      where: {
+        userId: userId,
+      },
+    });
+  }
+
+  async changeUserPassword(
+    email: string,
+    newPasswordHash: string,
+  ): Promise<User> {
+    return await this.prismaService.user.update({
+      data: {
+        password: newPasswordHash,
+      },
+      where: {
+        email: email,
       },
     });
   }
