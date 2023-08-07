@@ -79,11 +79,18 @@ export interface SolarGenerateRequestDTO {
   ccSerial: string;
 }
 
-export interface ResendEmailRequestDto {
+export interface ResetPasswordRequestDTO {
   /** User's email */
   email: string;
-  /** User's id */
-  id: number;
+  /** User's new password */
+  newPassword: string;
+  /** Reset Password Token */
+  token: string;
+}
+
+export interface ForgotPasswordRequestDTO {
+  /** User's email */
+  email: string;
 }
 
 export interface ResendEmailResponseDto {
@@ -91,6 +98,13 @@ export interface ResendEmailResponseDto {
   success: boolean;
   /** Brief description of the response. */
   message: string;
+}
+
+export interface ResendEmailRequestDto {
+  /** User's email */
+  email: string;
+  /** User's id */
+  id: number;
 }
 
 export interface VerifyEmailResponseDto {
@@ -147,6 +161,30 @@ export interface RegisterUserSMEsRequest {
   industry: RegisterUserSMEsRequestIndustry;
   /** SMEs' size */
   size: RegisterUserSMEsRequestSize;
+}
+
+/**
+ * User's role
+ */
+export type RegisterUserResponseRole =
+  (typeof RegisterUserResponseRole)[keyof typeof RegisterUserResponseRole];
+
+export const RegisterUserResponseRole = {
+  USER: "USER",
+  ADMIN: "ADMIN",
+} as const;
+
+export interface RegisterUserResponse {
+  /** User ID */
+  id: number;
+  /** User's email */
+  email: string;
+  /** User's name */
+  name: string;
+  /** User's telephone number */
+  phone: string;
+  /** User's role */
+  role: RegisterUserResponseRole;
 }
 
 export interface RegisterUserRetailRequest {

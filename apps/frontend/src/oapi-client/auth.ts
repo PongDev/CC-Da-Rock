@@ -17,16 +17,21 @@ import type {
   QueryKey,
 } from "@tanstack/react-query";
 import type {
+  RegisterUserResponse,
   RegisterUserRetailRequest,
   RegisterUserSMEsRequest,
   LoginRequest,
+  VerifyEmailResponseDto,
+  ResendEmailResponseDto,
   ResendEmailRequestDto,
+  ForgotPasswordRequestDTO,
+  ResetPasswordRequestDTO,
 } from "./aPIDocument.schemas";
 
 export const authControllerRegisterRetail = (
   registerUserRetailRequest: RegisterUserRetailRequest,
   options?: AxiosRequestConfig
-): Promise<AxiosResponse<void>> => {
+): Promise<AxiosResponse<RegisterUserResponse>> => {
   return axios.post(
     `/auth/register/retail`,
     registerUserRetailRequest,
@@ -35,7 +40,7 @@ export const authControllerRegisterRetail = (
 };
 
 export const getAuthControllerRegisterRetailMutationOptions = <
-  TError = AxiosError<unknown>,
+  TError = AxiosError<void>,
   TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
@@ -70,10 +75,10 @@ export type AuthControllerRegisterRetailMutationResult = NonNullable<
 >;
 export type AuthControllerRegisterRetailMutationBody =
   RegisterUserRetailRequest;
-export type AuthControllerRegisterRetailMutationError = AxiosError<unknown>;
+export type AuthControllerRegisterRetailMutationError = AxiosError<void>;
 
 export const useAuthControllerRegisterRetail = <
-  TError = AxiosError<unknown>,
+  TError = AxiosError<void>,
   TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
@@ -92,12 +97,12 @@ export const useAuthControllerRegisterRetail = <
 export const authControllerRegisterSMEs = (
   registerUserSMEsRequest: RegisterUserSMEsRequest,
   options?: AxiosRequestConfig
-): Promise<AxiosResponse<void>> => {
+): Promise<AxiosResponse<RegisterUserResponse>> => {
   return axios.post(`/auth/register/SMEs`, registerUserSMEsRequest, options);
 };
 
 export const getAuthControllerRegisterSMEsMutationOptions = <
-  TError = AxiosError<unknown>,
+  TError = AxiosError<void>,
   TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
@@ -131,10 +136,10 @@ export type AuthControllerRegisterSMEsMutationResult = NonNullable<
   Awaited<ReturnType<typeof authControllerRegisterSMEs>>
 >;
 export type AuthControllerRegisterSMEsMutationBody = RegisterUserSMEsRequest;
-export type AuthControllerRegisterSMEsMutationError = AxiosError<unknown>;
+export type AuthControllerRegisterSMEsMutationError = AxiosError<void>;
 
 export const useAuthControllerRegisterSMEs = <
-  TError = AxiosError<unknown>,
+  TError = AxiosError<void>,
   TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
@@ -333,7 +338,7 @@ export const useAuthControllerProfile = <
 export const authControllerVerify = (
   token: string,
   options?: AxiosRequestConfig
-): Promise<AxiosResponse<void>> => {
+): Promise<AxiosResponse<VerifyEmailResponseDto>> => {
   return axios.get(`/auth/email/verify/${token}`, options);
 };
 
@@ -342,7 +347,7 @@ export const getAuthControllerVerifyQueryKey = (token: string) =>
 
 export const getAuthControllerVerifyQueryOptions = <
   TData = Awaited<ReturnType<typeof authControllerVerify>>,
-  TError = AxiosError<unknown>
+  TError = AxiosError<void>
 >(
   token: string,
   options?: {
@@ -373,11 +378,11 @@ export const getAuthControllerVerifyQueryOptions = <
 export type AuthControllerVerifyQueryResult = NonNullable<
   Awaited<ReturnType<typeof authControllerVerify>>
 >;
-export type AuthControllerVerifyQueryError = AxiosError<unknown>;
+export type AuthControllerVerifyQueryError = AxiosError<void>;
 
 export const useAuthControllerVerify = <
   TData = Awaited<ReturnType<typeof authControllerVerify>>,
-  TError = AxiosError<unknown>
+  TError = AxiosError<void>
 >(
   token: string,
   options?: {
@@ -403,12 +408,12 @@ export const useAuthControllerVerify = <
 export const authControllerResendEmailVerification = (
   resendEmailRequestDto: ResendEmailRequestDto,
   options?: AxiosRequestConfig
-): Promise<AxiosResponse<void>> => {
+): Promise<AxiosResponse<ResendEmailResponseDto>> => {
   return axios.get(`/auth/email/resend`, options);
 };
 
 export const getAuthControllerResendEmailVerificationMutationOptions = <
-  TError = AxiosError<unknown>,
+  TError = AxiosError<void>,
   TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
@@ -444,10 +449,10 @@ export type AuthControllerResendEmailVerificationMutationResult = NonNullable<
 export type AuthControllerResendEmailVerificationMutationBody =
   ResendEmailRequestDto;
 export type AuthControllerResendEmailVerificationMutationError =
-  AxiosError<unknown>;
+  AxiosError<void>;
 
 export const useAuthControllerResendEmailVerification = <
-  TError = AxiosError<unknown>,
+  TError = AxiosError<void>,
   TContext = unknown
 >(options?: {
   mutation?: UseMutationOptions<
@@ -460,6 +465,128 @@ export const useAuthControllerResendEmailVerification = <
 }) => {
   const mutationOptions =
     getAuthControllerResendEmailVerificationMutationOptions(options);
+
+  return useMutation(mutationOptions);
+};
+export const authControllerForgotPassword = (
+  forgotPasswordRequestDTO: ForgotPasswordRequestDTO,
+  options?: AxiosRequestConfig
+): Promise<AxiosResponse<void>> => {
+  return axios.post(`/auth/forgot-password`, forgotPasswordRequestDTO, options);
+};
+
+export const getAuthControllerForgotPasswordMutationOptions = <
+  TError = AxiosError<unknown>,
+  TContext = unknown
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof authControllerForgotPassword>>,
+    TError,
+    { data: ForgotPasswordRequestDTO },
+    TContext
+  >;
+  axios?: AxiosRequestConfig;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof authControllerForgotPassword>>,
+  TError,
+  { data: ForgotPasswordRequestDTO },
+  TContext
+> => {
+  const { mutation: mutationOptions, axios: axiosOptions } = options ?? {};
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof authControllerForgotPassword>>,
+    { data: ForgotPasswordRequestDTO }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return authControllerForgotPassword(data, axiosOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AuthControllerForgotPasswordMutationResult = NonNullable<
+  Awaited<ReturnType<typeof authControllerForgotPassword>>
+>;
+export type AuthControllerForgotPasswordMutationBody = ForgotPasswordRequestDTO;
+export type AuthControllerForgotPasswordMutationError = AxiosError<unknown>;
+
+export const useAuthControllerForgotPassword = <
+  TError = AxiosError<unknown>,
+  TContext = unknown
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof authControllerForgotPassword>>,
+    TError,
+    { data: ForgotPasswordRequestDTO },
+    TContext
+  >;
+  axios?: AxiosRequestConfig;
+}) => {
+  const mutationOptions =
+    getAuthControllerForgotPasswordMutationOptions(options);
+
+  return useMutation(mutationOptions);
+};
+export const authControllerResetPassword = (
+  resetPasswordRequestDTO: ResetPasswordRequestDTO,
+  options?: AxiosRequestConfig
+): Promise<AxiosResponse<void>> => {
+  return axios.post(`/auth/reset-password`, resetPasswordRequestDTO, options);
+};
+
+export const getAuthControllerResetPasswordMutationOptions = <
+  TError = AxiosError<unknown>,
+  TContext = unknown
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof authControllerResetPassword>>,
+    TError,
+    { data: ResetPasswordRequestDTO },
+    TContext
+  >;
+  axios?: AxiosRequestConfig;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof authControllerResetPassword>>,
+  TError,
+  { data: ResetPasswordRequestDTO },
+  TContext
+> => {
+  const { mutation: mutationOptions, axios: axiosOptions } = options ?? {};
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof authControllerResetPassword>>,
+    { data: ResetPasswordRequestDTO }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return authControllerResetPassword(data, axiosOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AuthControllerResetPasswordMutationResult = NonNullable<
+  Awaited<ReturnType<typeof authControllerResetPassword>>
+>;
+export type AuthControllerResetPasswordMutationBody = ResetPasswordRequestDTO;
+export type AuthControllerResetPasswordMutationError = AxiosError<unknown>;
+
+export const useAuthControllerResetPassword = <
+  TError = AxiosError<unknown>,
+  TContext = unknown
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof authControllerResetPassword>>,
+    TError,
+    { data: ResetPasswordRequestDTO },
+    TContext
+  >;
+  axios?: AxiosRequestConfig;
+}) => {
+  const mutationOptions =
+    getAuthControllerResetPasswordMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
