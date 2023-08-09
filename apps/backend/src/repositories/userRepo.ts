@@ -1,11 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { SMEsSize, SMEsType, User } from 'database';
+import {
+  Prisma,
+  ResetPassword,
+  RoleType,
+  SMEsSize,
+  SMEsType,
+  User,
+} from 'database';
 // import { InvalidRequestError } from 'src/common/error';
-import { InvalidRequestError, RecordAlreadyExists } from 'src/common/error';
+import {
+  DatabaseError,
+  InvalidRequestError,
+  RecordAlreadyExists,
+} from 'src/common/error';
 
 @Injectable()
-export class UsersRepository {
+export class UserRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   // async createUserRetail(creatUserData: {
@@ -27,69 +38,193 @@ export class UsersRepository {
   //   }
   // }
 
-  async createUser(creatUserData: {
+  async registerUserWithoutEmail(creatUserData: {
     name: string;
     password: string;
     email: string;
     phone: string;
     idNumer?: string;
     size?: SMEsSize;
-    type?: SMEsType;
+    industry?: SMEsType;
   }): Promise<User> {
     try {
-      const newUser = await this.prismaService.user.create({
-        data: creatUserData,
+      const existedEmail = await this.findUniqueUser({
+        email: creatUserData.email,
       });
-      if (creatUserData.size && creatUserData.type && newUser) {
-        await this.prismaService.sMEs.create({
+      if (existedEmail) {
+        throw new RecordAlreadyExists('Email has already been used.');
+      }
+      const { email, size, industry, ...creatUserDataWithoutEmail } =
+        creatUserData;
+      let newUser: User;
+      if (size && industry) {
+        newUser = await this.prismaService.user.create({
           data: {
-            industry: creatUserData.type,
-            size: creatUserData.size,
-            userId: newUser.id,
+            ...creatUserDataWithoutEmail,
+            smes: {
+              create: {
+                industry: industry,
+                size: size,
+              },
+            },
           },
+        });
+      } else {
+        newUser = await this.prismaService.user.create({
+          data: creatUserDataWithoutEmail,
         });
       }
       return newUser;
     } catch (e) {
-      if (e.code === 'P2002') {
-        throw new RecordAlreadyExists('Email already exists.');
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          throw new RecordAlreadyExists('Email or name already exists.');
+        }
+        throw new DatabaseError(`Error with database. ${e.message}`);
+      } else {
+        throw e;
       }
-      throw e;
     }
   }
 
   async findUniqueUser(searchField: {
-    userId?: number;
-    email?: string;
+    id?: number;
     name?: string;
+    email?: string;
   }): Promise<User> {
-    if (!searchField.email && !searchField.userId) {
-      throw new InvalidRequestError('Must enter email/id.');
+    if (!searchField.id && !searchField.email && searchField.name) {
+      throw new InvalidRequestError('Must enter id, name or email.');
     }
     return await this.prismaService.user.findUnique({
-      where: {
-        id: searchField.userId,
-        email: searchField.email,
-        name: searchField.name,
-      },
+      where: searchField,
     });
   }
 
-  async getUserByEmail(email: string) {
-    return await this.prismaService.user.findUnique({
-      where: {
-        email: email,
-      },
+  async find(
+    searchField: {
+      id?: number;
+      name?: string;
+      email?: string;
+      phone?: string;
+      emailVerified?: boolean;
+      role?: RoleType;
+      idNumber?: string;
+      token?: string;
+    },
+    option?,
+  ) {
+    return await this.prismaService.user.findMany({
+      where: searchField,
+      ...option,
     });
   }
 
-  async updateToken(id: number, token: string) {
-    await this.prismaService.user.update({
+  async findFirst(searchField: {
+    id?: number;
+    email?: string;
+    emailVerified?: boolean;
+  }) {
+    return await this.prismaService.user.findFirst({
+      where: searchField,
+    });
+  }
+
+  async updateUser(
+    id: number,
+    data: {
+      id?: number;
+      name?: string;
+      email?: string;
+      password?: string;
+      phone?: string;
+      emailVerified?: boolean;
+      role?: RoleType;
+      idNumber?: string;
+      token?: string;
+    },
+  ) {
+    return await this.prismaService.user.update({
       where: {
         id: id,
       },
+      data: data,
+    });
+  }
+
+  async deleteUser(id: number) {
+    return await this.prismaService.user.delete({
+      where: {
+        id: id,
+      },
+    });
+  }
+
+  async createOrUpdateUserResetPasswordToken(
+    userId: number,
+    token: {
+      token: string;
+      expiredAt: Date;
+    },
+  ): Promise<void> {
+    await this.prismaService.user.update({
+      where: {
+        id: userId,
+      },
       data: {
-        token: token,
+        resetPassword: {
+          upsert: {
+            create: token,
+            update: token,
+          },
+        },
+      },
+    });
+  }
+
+  async getUserResetPasswordToken(userId: number): Promise<ResetPassword> {
+    return await this.prismaService.resetPassword.findUnique({
+      where: {
+        userId: userId,
+      },
+    });
+  }
+
+  async getUserResetPasswordTokenFromEmail(
+    email: string,
+  ): Promise<ResetPassword> {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email: email,
+      },
+      select: {
+        resetPassword: true,
+      },
+    });
+
+    if (!user) {
+      return null;
+    }
+    return user.resetPassword;
+  }
+
+  async deleteUserResetPasswordToken(userId: number): Promise<void> {
+    await this.prismaService.resetPassword.delete({
+      where: {
+        userId: userId,
+      },
+    });
+  }
+
+  async changeUserPassword(
+    email: string,
+    newPasswordHash: string,
+  ): Promise<User> {
+    return await this.prismaService.user.update({
+      data: {
+        password: newPasswordHash,
+      },
+      where: {
+        email: email,
       },
     });
   }

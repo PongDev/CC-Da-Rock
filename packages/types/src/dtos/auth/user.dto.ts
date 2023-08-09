@@ -41,7 +41,7 @@ export class User {
   password: string;
 
   @ApiProperty({
-    type: () => Number,
+    type: () => String,
     required: true,
     description: "User's name",
     example: "John Doe",

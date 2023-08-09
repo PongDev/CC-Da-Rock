@@ -37,7 +37,7 @@ export class SolarsRepository {
     );
   }
 
-  async burnSolar() {
+  async burnSolar(): Promise<string[]> {
     try {
       return await this.prisma.$transaction(
         async (tx) => {
@@ -105,5 +105,13 @@ export class SolarsRepository {
     } catch (err) {
       return null;
     }
+  }
+
+  async countBurnedSolar(): Promise<number> {
+    return await this.prisma.solarSerial.count({
+      where: {
+        isBurned: true,
+      },
+    });
   }
 }

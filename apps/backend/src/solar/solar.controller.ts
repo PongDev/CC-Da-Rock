@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -12,6 +13,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { User } from 'src/auth/user.decorator';
 import { AllExceptionsFilter } from 'src/common/exception.filter';
 import {
+  CountBurnedSolarResponseDTO,
   JWTPayload,
   SolarBurnResponseDTO,
   SolarGenerateRequestDTO,
@@ -65,5 +67,15 @@ export class SolarController {
       return await this.solarService.burnSolar();
     }
     throw new PermissionError('Only admin can burn carbon credits');
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Count Burned Solar',
+  })
+  @Get('count-burned-solar')
+  @HttpCode(HttpStatus.OK)
+  async countBurnedSolar(): Promise<CountBurnedSolarResponseDTO> {
+    return await this.solarService.countBurnedSolar();
   }
 }

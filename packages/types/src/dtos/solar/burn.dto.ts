@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNotEmpty, IsArray } from "class-validator";
+import { IsString, IsNotEmpty, IsArray, IsInt, Min } from "class-validator";
 
 export class SolarBurnResponseDTO {
   @ApiProperty({
@@ -11,4 +11,16 @@ export class SolarBurnResponseDTO {
   @IsString({ each: true })
   @IsNotEmpty()
   ccSerials: string[];
+}
+
+export class CountBurnedSolarResponseDTO {
+  @ApiProperty({
+    type: () => Number,
+    required: true,
+    description: "Count Burned Solar",
+  })
+  @IsInt()
+  @Min(0)
+  @IsNotEmpty()
+  burnedSolar: number;
 }

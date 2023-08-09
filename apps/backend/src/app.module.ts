@@ -8,6 +8,7 @@ import { backendConfig } from 'config';
 import { GraphqlModule } from './graphql/graphql.module';
 import { AuthModule } from './auth/auth.module';
 import { SolarModule } from './solar/solar.module';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { SolarModule } from './solar/solar.module';
     GraphqlModule,
     AuthModule,
     SolarModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

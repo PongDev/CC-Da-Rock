@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BusinessLogicError } from 'src/common/error';
 import { SolarsRepository } from 'src/repositories/solarRepo';
 import {
-  JWTPayload,
+  CountBurnedSolarResponseDTO,
   SolarBurnResponseDTO,
   SolarGenerateResponseDTO,
 } from 'types';
@@ -24,6 +24,12 @@ export class SolarService {
     }
     return {
       ccSerials: result,
+    };
+  }
+
+  async countBurnedSolar(): Promise<CountBurnedSolarResponseDTO> {
+    return {
+      burnedSolar: await this.solarRepo.countBurnedSolar(),
     };
   }
 }

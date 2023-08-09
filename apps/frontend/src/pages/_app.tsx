@@ -1,10 +1,12 @@
+import { setup } from "@/services/user.service";
 import "@/styles/globals.css";
 import {
-  baseTheme,
   ChakraProvider,
   extendTheme,
   withDefaultColorScheme,
 } from "@chakra-ui/react";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import axios from "axios";
 import type { AppProps } from "next/app";
 
 const theme = extendTheme(
@@ -24,13 +26,22 @@ const theme = extendTheme(
       },
     },
   },
-  withDefaultColorScheme({ colorScheme: "brand" })
+  withDefaultColorScheme({ colorScheme: "green" })
 );
+
+const queryClient = new QueryClient();
+console.log(process.env.BACKEND_API_URL);
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+
+// setup user service and axios
+setup();
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </QueryClientProvider>
   );
 }

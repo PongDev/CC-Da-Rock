@@ -4,16 +4,24 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
+  Redirect,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import {
+  ForgotPasswordRequestDTO,
   JWTPayload,
   JWTToken,
   LoginRequest,
   RegisterUserResponse,
   RegisterUserRetailRequest,
+  RegisterUserSMEsRequest,
+  ResendEmailRequestDto,
+  ResendEmailResponseDto,
+  ResetPasswordRequestDTO,
+  VerifyEmailResponseDto,
 } from 'types';
 import { User } from './user.decorator';
 import { AuthService } from './auth.service';
@@ -21,7 +29,8 @@ import { JwtRefreshAuthGuard } from './jwt-refresh-auth.guard';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllExceptionsFilter } from 'src/common/exception.filter';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import * as database from 'database';
+import { EmailNotSentError } from 'src/common/error';
+import { backendConfig as config } from 'config';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -32,6 +41,7 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'The user has been successfully created.',
+    type: RegisterUserResponse,
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
@@ -46,12 +56,21 @@ export class AuthController {
   async registerRetail(
     @Body() userData: RegisterUserRetailRequest,
   ): Promise<RegisterUserResponse> {
-    return await this.authService.registerRetail(userData);
+    const newUser = await this.authService.registerRetail(userData);
+    const emailSent = await this.authService.sendVerificationEmail(
+      userData.email,
+      newUser.id,
+    );
+    if (!emailSent) {
+      throw new EmailNotSentError('Email not sent.');
+    }
+    return newUser;
   }
 
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'The user has been successfully created.',
+    type: RegisterUserResponse,
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
@@ -64,9 +83,17 @@ export class AuthController {
   @Post('register/SMEs')
   @HttpCode(HttpStatus.CREATED)
   async registerSMEs(
-    @Body() userData: RegisterUserRetailRequest,
+    @Body() userData: RegisterUserSMEsRequest,
   ): Promise<RegisterUserResponse> {
-    return await this.authService.registerSMEs(userData);
+    const newUser = await this.authService.registerSMEs(userData);
+    const emailSent = await this.authService.sendVerificationEmail(
+      newUser.email,
+      newUser.id,
+    );
+    if (!emailSent) {
+      throw new EmailNotSentError('Email not sent.');
+    }
+    return newUser;
   }
 
   @ApiResponse({
@@ -76,6 +103,10 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad request. Please check your input again.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.',
   })
   @Post('login')
   @HttpCode(HttpStatus.OK)
@@ -97,14 +128,14 @@ export class AuthController {
   @UseGuards(JwtRefreshAuthGuard)
   async refresh(@User() user: JWTPayload): Promise<JWTToken> {
     return await this.authService.generateToken({
-      userID: user.userId,
+      userId: user.userId,
       role: user.role,
     });
   }
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Token has been refreshed.',
+    description: 'Get profile successfully.',
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
@@ -114,7 +145,95 @@ export class AuthController {
   @Get('profile')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
-  async profile(@User() user: JWTPayload): Promise<database.User> {
-    return await this.authService.profile(user.userID);
+  async profile(@User() user: JWTPayload) {
+    return await this.authService.profile(user.userId);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successfully verify email.',
+    type: VerifyEmailResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Problem with the request. Invalid token is provided.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Link has expired or email has already been verified.',
+  })
+  @Get('email/verify/:token')
+  @HttpCode(HttpStatus.OK)
+  @Redirect(`${config.frontend.url}/auth/success`)
+  async verify(
+    @Param('token') token: string,
+  ): Promise<VerifyEmailResponseDto | { url: string }> {
+    const verifiedUserId = await this.authService.verifyEmail(token);
+    if (verifiedUserId) {
+      return {
+        url: `${config.frontend.url}/auth/success`,
+      };
+    } else {
+      return {
+        success: true,
+        message: 'Successfully verify email.',
+        email: verifiedUserId.email,
+      };
+    }
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successfully resend email.',
+    type: ResendEmailResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Problem with the request.',
+  })
+  @Get('email/resend')
+  @HttpCode(HttpStatus.OK)
+  async resendEmailVerification(
+    @Body() data: ResendEmailRequestDto,
+  ): Promise<ResendEmailResponseDto> {
+    const isEmailSent = await this.authService.resendVerificationEmail(
+      data.email,
+      data.id,
+    );
+    if (isEmailSent) {
+      return {
+        success: true,
+        message: 'Email has been sent.',
+      };
+    } else {
+      throw new EmailNotSentError('Email not sent.');
+    }
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description:
+      'Verification Email has been sent if the email exists in our system.',
+    type: null,
+  })
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(@Body() data: ForgotPasswordRequestDTO): Promise<void> {
+    await this.authService.forgotPassword(data.email);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Reset User's Password.",
+    type: null,
+  })
+  @Post('reset-password')
+  @HttpCode(HttpStatus.CREATED)
+  async resetPassword(@Body() data: ResetPasswordRequestDTO): Promise<void> {
+    await this.authService.resetPassword(
+      data.email,
+      data.token,
+      data.newPassword,
+    );
   }
 }
