@@ -3,20 +3,34 @@ import { Link } from "@chakra-ui/next-js";
 import {
   Box,
   Container,
+  Divider,
   Grid,
   Heading,
   HStack,
   Img,
+  Stack,
   Text,
   VStack,
 } from "@chakra-ui/react";
 
-const stores = [
+type Store = {
+  name: string;
+  displayName: string;
+  description: string;
+  image: string;
+  disable?: boolean;
+  solarCoin: number;
+  price: number;
+};
+
+const stores: Store[] = [
   {
     name: "solar-cc",
     displayName: "Solar CC",
     description: "Official store of Solar CC",
     image: "/favicon.png",
+    solarCoin: 99999999,
+    price: 0.5,
   },
   {
     name: "store-1",
@@ -24,14 +38,16 @@ const stores = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam",
     image: "https://picsum.photos/256",
-    disable: true,
+    solarCoin: 1,
+    price: 0.6,
   },
   {
     name: "store-2",
     displayName: "Store 2",
     description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
     image: "https://picsum.photos/256?blur=1",
-    disable: true,
+    solarCoin: 0,
+    price: 0.6,
   },
 ];
 
@@ -65,10 +81,26 @@ export default function Store() {
                 boxSize={{ base: 32, sm: 64, md: 128, lg: 192 }}
                 objectFit="cover"
               />
-              <Box>
-                <Heading>{store.displayName}</Heading>
-                <Text>{store.description}</Text>
-              </Box>
+              <Stack gap={2}>
+                <Box>
+                  <Heading>{store.displayName}</Heading>
+                  <Text>{store.description}</Text>
+                </Box>
+
+                <HStack>
+                  <Text
+                    fontSize="sm"
+                    fontWeight="thin"
+                    color={store.solarCoin > 0 ? "gray.600" : "red.700"}
+                  >
+                    {store.solarCoin} Coins
+                  </Text>
+                  <Text>•</Text>
+                  <Text fontSize="sm" fontWeight="thin" color="gray.600">
+                    {store.price} Baht/Coins
+                  </Text>
+                </HStack>
+              </Stack>
             </Grid>
           ))}
         </VStack>
